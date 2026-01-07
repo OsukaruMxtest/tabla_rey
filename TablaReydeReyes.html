@@ -34,11 +34,9 @@
             height: 80%;
             justify-content: center;
             align-items: flex-start;
-            /* Posición superior ajustable */
             padding-top: var(--top-inicial, 100px);
         }
 
-        /* Contenedor único para todas las posiciones */
         #contenedor-unico {
             width: 100%;
             height: 100%;
@@ -47,7 +45,6 @@
             position: relative;
         }
 
-        /* Eliminar todos los estilos de tabla visual */
         .tabla-cuerpo {
             flex: 1;
             overflow: hidden;
@@ -58,7 +55,6 @@
             position: relative;
         }
 
-        /* Eliminar encabezados */
         .tabla-cabecera {
             display: none !important;
         }
@@ -68,9 +64,7 @@
             position: relative;
             opacity: 0;
             animation: fadeInRight 0.5s forwards;
-            /* Separación vertical configurable */
             margin-bottom: var(--separacion-vertical, 0px);
-            /* Posición vertical fija para cada fila */
             height: var(--altura-fila, 60px);
         }
 
@@ -134,12 +128,10 @@
             right: 0;
         }
 
-        /* Eliminar indicador de páginas */
         .pagina-indicador {
             display: none !important;
         }
         
-        /* Asegurar visibilidad completa de 10 filas */
         .tabla-cuerpo {
             min-height: 800px;
             overflow: visible !important;
@@ -151,36 +143,29 @@
     </style>
 </head>
 <body>
-    <!-- Contenedor único para todas las posiciones -->
     <div id="contenedor-unico">
         <div class="tabla-cuerpo" id="cuerpo-unico">
-            <!-- Todas las filas generadas por JS -->
         </div>
     </div>
 
-    <!-- Navegación Invisible -->
     <div class="navegacion" id="atras"></div>
     <div class="navegacion" id="siguiente"></div>
 
     <script>
-        // Variables globales
-        let jugadores = new Map(); // Mapa: uId -> {nombre, puntos, wwcd, puntosPosicion, puntosBajas, mejorPosicionUltima}
+        let jugadores = new Map(); 
         let datosOrdenados = [];
         let paginaActual = 1;
-        let maxPaginas = 1; // Se calculará dinámicamente
+        let maxPaginas = 1; 
 
-        // CONFIGURACIÓN BACKEND - POSICIONES Y SEPARACIÓN
-        // Valores predeterminados - ajustables para diferentes fondos
         const configPosiciones = {
-            posX: "310px",      // Posición horizontal de la columna POS
-            jugadorX: "700px",  // Posición horizontal de la columna JUGADOR
-            puntosX: "1450px",   // Posición horizontal de la columna PUNTOS
-            separacionVertical: "-101px", // Separación vertical entre filas
-            alturaFila: "80px", // Altura de cada fila
-            topInicial: "180px" // Posición superior inicial ajustable
+            posX: "310px",      
+            jugadorX: "700px", 
+            puntosX: "1450px",   
+            separacionVertical: "-101px", 
+            alturaFila: "80px", 
+            topInicial: "180px" 
         };
 
-        // Aplicar configuración inicial
         function aplicarConfiguracion() {
             document.documentElement.style.setProperty('--pos-x', configPosiciones.posX);
             document.documentElement.style.setProperty('--jugador-x', configPosiciones.jugadorX);
@@ -190,22 +175,19 @@
             document.documentElement.style.setProperty('--top-inicial', configPosiciones.topInicial);
         }
 
-        // Puntos por posición
         const puntosPosicion = {
             1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 1
         };
 
-        // Función para cargar todos los archivos CSV
         async function cargarTodosCSV() {
             let indice = 1;
             let archivosCargados = 0;
-            const maxIntentos = 50; // Límite para buscar archivos
+            const maxIntentos = 50; 
 
             while (indice <= maxIntentos) {
                 try {
                     const respuesta = await fetch(`data/campeon_supremo/partidas/M${indice}.csv`);
                     if (!respuesta.ok) {
-                        // Si falla, asumimos que no hay más archivos
                         break;
                     }
                     const texto = await respuesta.text();
@@ -213,7 +195,6 @@
                     archivosCargados++;
                     indice++;
                 } catch (error) {
-                    // Error en la carga, probablemente no existe el archivo
                     break;
                 }
             }
@@ -224,15 +205,13 @@
             }
 
             procesarYOrdenarJugadores();
-            aplicarConfiguracion(); // Aplicar configuración antes de renderizar
+            aplicarConfiguracion(); 
             renderizarPagina(paginaActual);
         }
 
-        // Procesar un archivo CSV
         function procesarCSV(textoCSV, numeroPartida) {
             const lineas = textoCSV.split('\n').filter(linea => linea.trim() !== '');
             
-            // Detectar encabezado REAL
             let inicio = 0;
             if (lineas[0].toLowerCase().includes('uid')) {
                 inicio = 1;
@@ -249,12 +228,11 @@
 
                 if (!uId || isNaN(rango)) continue;
 
-                // Inicializar o actualizar jugador
                 if (!jugadores.has(uId)) {
                     jugadores.set(uId, {
                         nombre: nombre,
                         puntos: 0,
-                        wwcd: 0, // Victorias (rango 1)
+                        wwcd: 0, 
                         puntosPosicion: 0,
                         puntosBajas: 0,
                         mejorPosicionUltima: Infinity,
@@ -264,7 +242,6 @@
 
                 const jugador = jugadores.get(uId);
                 
-                // Actualizar datos
                 const puntosPorPos = puntosPosicion[rango] || 0;
                 jugador.puntosPosicion += puntosPorPos;
                 jugador.puntosBajas += bajas;
@@ -274,7 +251,6 @@
                     jugador.wwcd += 1;
                 }
                 
-                // Actualizar mejor posición en la última partida
                 if (numeroPartida >= jugador.ultimaPartida) {
                     jugador.ultimaPartida = numeroPartida;
                     if (rango < jugador.mejorPosicionUltima) {
@@ -284,7 +260,6 @@
             }
         }
 
-        // Datos de ejemplo si no hay CSV - AHORA MÁS JUGADORES
         function datosDeEjemplo() {
             const nombres = ['Alex', 'Berta', 'Carlos', 'Diana', 'Edu', 'Fátima', 'Gorka', 'Helena', 'Iván', 'Julia', 'Kevin', 'Luna', 'Mario', 'Nora', 'Óscar', 'Paula', 'Quique', 'Rosa', 'Sergio', 'Tania', 'Ulises', 'Vega', 'Wendy', 'Xavier', 'Yolanda', 'Zoe', 'Aitor', 'Bianca', 'César', 'Dámaris', 'Elena', 'Fernando', 'Gabriela', 'Héctor', 'Isabel', 'Javier', 'Karina', 'Luis', 'Marta', 'Nacho'];
             
@@ -306,7 +281,6 @@
             }
         }
 
-        // Función de desempate
         function ordenarJugadores() {
             const arrayJugadores = Array.from(jugadores.entries()).map(([uId, datos]) => ({
                 uId,
@@ -314,93 +288,72 @@
             }));
 
             arrayJugadores.sort((a, b) => {
-                // 1. PUNTOS TOTALES (descendente)
                 if (b.puntos !== a.puntos) return b.puntos - a.puntos;
                 
-                // 2. WWCD (descendente)
                 if (b.wwcd !== a.wwcd) return b.wwcd - a.wwcd;
                 
-                // 3. PUNTOS POR POSICIÓN (descendente)
                 if (b.puntosPosicion !== a.puntosPosicion) return b.puntosPosicion - a.puntosPosicion;
                 
-                // 4. PUNTOS POR ELIMINACIÓN (descendente)
                 if (b.puntosBajas !== a.puntosBajas) return b.puntosBajas - a.puntosBajas;
                 
-                // 5. MEJOR POSICIÓN EN LA ÚLTIMA PARTIDA (ascendente)
                 return a.mejorPosicionUltima - b.mejorPosicionUltima;
             });
 
             return arrayJugadores;
         }
 
-        // Procesar y ordenar jugadores
         function procesarYOrdenarJugadores() {
             datosOrdenados = ordenarJugadores();
-            // Calcular maxPaginas dinámicamente basado en la cantidad de jugadores
             maxPaginas = Math.ceil(datosOrdenados.length / 10);
         }
 
-        // Renderizar una página específica - SIEMPRE 10 POSICIONES
         function renderizarPagina(pagina) {
             if (pagina < 1 || pagina > maxPaginas) return;
             
             paginaActual = pagina;
             
-            // Asegurar altura suficiente para 10 filas
             const cuerpo = document.getElementById('cuerpo-unico');
-            cuerpo.style.height = "calc(100vh - 40px)"; // Altura fija para vista completa
+            cuerpo.style.height = "calc(100vh - 40px)"; 
             cuerpo.style.overflow = "visible";
             
-            // Limpiar contenedor
             cuerpo.innerHTML = '';
             
-            // Calcular índice de inicio
             const inicio = (pagina - 1) * 10;
             
-            // Agregar 10 filas (siempre 10, aunque estén vacías)
             for (let i = 0; i < 10; i++) {
                 const indiceGlobal = inicio + i;
                 const jugador = datosOrdenados[indiceGlobal];
                 const posicionReal = indiceGlobal + 1;
                 
-                // Animación en cascada - cada fila con delay progresivo
                 setTimeout(() => {
                     crearFila(jugador, posicionReal, cuerpo, i);
-                }, i * 80); // 80ms de delay entre cada fila para efecto cascada
+                }, i * 80); 
             }
             
-            // Actualizar estado de navegación
             document.getElementById('siguiente').style.cursor = pagina < maxPaginas ? 'pointer' : 'default';
             document.getElementById('atras').style.cursor = pagina > 1 ? 'pointer' : 'default';
         }
 
-        // Crear una fila de tabla - POSICIONES FIJAS
         function crearFila(jugador, posicion, contenedor, indiceFila) {
             const fila = document.createElement('div');
             fila.className = 'fila';
             
-            // CALCULO FIXED: topInicial es absoluto, no afectado por separación
             const topInicial = parseInt(configPosiciones.topInicial) || 240;
             const alturaFila = parseInt(configPosiciones.alturaFila) || 60;
-            // Eliminamos la suma de separacion para el cálculo de top
             const topPosicion = topInicial + (indiceFila * alturaFila);
             fila.style.top = `${topPosicion}px`;
             
-            // Celda de posición
             const celdaPos = document.createElement('div');
             celdaPos.className = 'celda posicion';
             celdaPos.textContent = posicion;
             
-            // Celda de jugador
             const celdaJugador = document.createElement('div');
             celdaJugador.className = 'celda jugador';
             celdaJugador.textContent = jugador ? jugador.nombre : '';
-            // Ajustar texto largo para que no se corte
             celdaJugador.style.maxWidth = '700px';
             celdaJugador.style.overflow = 'hidden';
             celdaJugador.style.textOverflow = 'ellipsis';
             
-            // Celda de puntos
             const celdaPuntos = document.createElement('div');
             celdaPuntos.className = 'celda puntos';
             celdaPuntos.textContent = jugador ? jugador.puntos : '';
@@ -411,7 +364,6 @@
             contenedor.appendChild(fila);
         }
 
-        // Navegación
         document.getElementById('siguiente').addEventListener('click', () => {
             if (paginaActual < maxPaginas) {
                 renderizarPagina(paginaActual + 1);
@@ -424,11 +376,9 @@
             }
         });
 
-        // Inicialización
         window.addEventListener('DOMContentLoaded', () => {
             cargarTodosCSV();
             
-            // También permitir navegación con teclas
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'ArrowRight' && paginaActual < maxPaginas) {
                     renderizarPagina(paginaActual + 1);
@@ -438,11 +388,10 @@
             });
         });
 
-        // EXPORTAR CONFIGURACIÓN PARA BACKEND
-        // Para modificar las posiciones desde el backend, se pueden ajustar estos valores:
         window.configuracionPosiciones = configPosiciones;
         window.aplicarConfiguracion = aplicarConfiguracion;
         window.renderizarPagina = renderizarPagina;
     </script>
 </body>
+
 </html>
