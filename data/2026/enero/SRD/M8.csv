@@ -1,0 +1,23 @@
+TeamID,Nombre del Equipo,Rango,uId,Nombre del Jugador,Salud,Número de Bajas,Daño,Máxima Distancia de Baja,Asistencias,Noqueos,Número de Headshots,Daño Recibido,Curación,Tiempo de Supervivencia,Tiempo Fuera del Círculo Azul,Daño Total por Veneno,Bajas en Vehículo,Bajas con Granada,Distancia Conducida,Distancia Recorrida,Rescates,Granadas de Humo Usadas,Granadas Fragmentación Usadas,Granadas Incendiarias Usadas,Granadas Cegadoras Usadas,Suministros Obtenidos,Daño Total por Equipo,HeadHits,BodyHits,HandHits,FootHits,LimbsHits,WeaponIDs,WeaponNames,WeaponDamage,WeaponKills,ShotsByWeapon,HitsByWeapon,TotalShots,TotalHits,Accuracy(%)
+2,EQUIPO 2,1,5539851147,namelessॱ666,62,3,551,18,0,0,0,5,0,21m 9s,0m 2s,32,0,1,10578,468,0,0,4,1,1,0,551,0,0,0,0,0,,,,,,,0,0,0
+21,EQUIPO 21,2,51813354732,『BcT』Tutio,0,0,0,0,0,0,0,151,130,21m 9s,0m 20s,65,0,0,11394,1005,0,1,3,4,3,0,0,0,0,0,0,0,,,,,,,0,0,0
+17,EQUIPO 17,3,51671781013,UnA2k9,0,1,9,3,0,0,0,70,141,21m 7s,0m 15s,136,1,0,13796,973,0,1,2,2,1,0,9,0,0,0,0,0,,,,,,,0,0,0
+100,EQUIPO 100,4,5382735629,〘LRK〙THISOMM,0,0,0,0,0,0,0,75,113,21m 0s,0m 1s,40,0,0,7921,1381,0,1,6,4,0,0,0,0,0,0,0,0,107008,Arma 107008,Arma 107008:0.0,Arma 107008:0,Arma 107008:0,Arma 107008:0,0,0,0
+8,EQUIPO 8,5,51272397811,DC๛ZorixPlay,0,0,0,0,0,0,0,154,371,20m 59s,1m 33s,297,0,0,10259,850,0,0,1,2,0,0,0,0,0,0,0,0,107011,Mortar,Mortar:0.0,Mortar:0,Mortar:3,Mortar:0,3,0,0
+15,EQUIPO 15,6,51958812313,Mʞ〢Nayda,0,2,271,3,0,0,0,121,21,20m 6s,0m 4s,0,2,0,9655,1204,0,0,1,0,0,0,271,0,0,0,0,0,,,,,,,0,0,0
+9,EQUIPO 9,7,5195769920,ElPINOCHOSEXY,0,0,116,0,0,0,0,67,125,20m 5s,0m 48s,121,0,0,14984,274,0,0,1,0,0,0,116,0,0,0,0,0,,,,,,,0,0,0
+3,EQUIPO 3,8,546362992,ㅇMiLeK,0,1,32,2,0,0,0,100,48,19m 51s,0m 7s,48,1,0,7350,1119,0,0,0,0,0,0,32,0,0,0,0,0,,,,,,,0,0,0
+13,EQUIPO 13,9,5216037752,1paMATO18,0,2,220,3,0,0,0,32,4,19m 36s,0m 3s,72,2,0,10964,1099,0,0,9,0,1,0,220,0,0,0,0,0,,,,,,,0,0,0
+4,EQUIPO 4,10,51849036118,Revenger15,0,0,0,0,0,0,0,100,0,19m 28s,0m 6s,0,0,0,11088,594,0,0,0,0,0,0,0,0,0,0,0,0,107011,Mortar,Mortar:0.0,Mortar:0,Mortar:0,Mortar:0,0,0,0
+19,EQUIPO 19,11,5151845920,ū7u7ū,0,2,175,4,0,0,0,44,88,18m 36s,0m 3s,102,2,0,11162,1117,0,0,2,0,0,0,175,0,0,0,0,0,,,,,,,0,0,0
+20,EQUIPO 20,12,535328945,RevXEAAAN,0,0,43,0,0,0,0,30,39,17m 13s,0m 17s,90,0,0,2792,2729,0,0,4,0,0,0,43,0,0,0,0,0,107011,Mortar,Mortar:0.0,Mortar:0,Mortar:4,Mortar:0,4,0,0
+7,EQUIPO 7,13,51830351242,Sadbacterium,0,1,100,2,0,0,0,191,22,16m 52s,0m 5s,10,1,0,7700,811,0,2,0,0,0,0,100,0,0,0,0,0,107011,Mortar,Mortar:0.0,Mortar:0,Mortar:2,Mortar:0,2,0,0
+1,EQUIPO 1,14,5114882255,ʚɞYessiʚɞ,0,0,0,0,0,0,0,74,3,16m 16s,0m 0s,0,0,0,6960,1430,0,0,0,1,0,0,0,0,0,0,0,0,,,,,,,0,0,0
+5,EQUIPO 5,15,5760505422,LoscarSPM,0,0,0,0,0,0,0,0,290,13m 28s,1m 51s,396,0,0,1480,2207,0,0,1,0,0,0,0,0,0,0,0,0,,,,,,,0,0,0
+11,EQUIPO 11,16,51792225482,ELLIMINATE2,0,1,100,4,0,0,0,116,26,13m 10s,0m 0s,0,1,0,5926,960,0,0,4,0,0,0,100,0,0,0,0,0,,,,,,,0,0,0
+12,EQUIPO 12,17,5845452191,『Masternoob』,0,0,0,0,0,0,0,100,92,13m 2s,0m 55s,92,0,0,2850,1903,0,1,0,1,0,0,0,0,0,0,0,0,,,,,,,0,0,0
+16,EQUIPO 16,18,5336419911,WHūMUSTANGg38,0,0,72,0,0,0,0,100,27,12m 29s,0m 0s,0,0,0,4569,796,0,0,3,0,0,0,72,0,0,0,0,0,,,,,,,0,0,0
+14,EQUIPO 14,19,5223758938,WHŪFlor,0,0,0,0,0,0,0,0,205,12m 25s,2m 24s,307,0,0,6299,1490,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,0,0,0
+6,EQUIPO 6,20,5445813853,FERNETxDavid,0,0,51,0,0,0,0,0,24,11m 19s,1m 27s,124,0,0,1433,2204,0,1,3,0,0,0,51,0,0,0,0,0,,,,,,,0,0,0
+18,EQUIPO 18,21,52189333869,TMッBanngT,0,0,0,0,0,0,0,100,0,10m 30s,0m 0s,0,0,0,5689,711,0,1,0,1,1,0,0,0,0,0,0,0,,,,,,,0,0,0
+10,EQUIPO 10,22,5162712510,Mʞ〢ＪＪ,0,0,0,0,0,0,0,100,13,8m 38s,0m 0s,0,0,0,6581,506,0,0,0,0,0,0,0,0,0,0,0,0,,,,,,,0,0,0

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasificación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            position: relative;
+            background-image: url('https://i.imgur.com/f0txTlJ.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            min-width: 100vw;
+            padding: 20px;
+        }
+
+        .contenedor-tablas {
+            display: flex;
+            width: 90%;
+            height: 80%;
+            justify-content: center;
+            align-items: flex-start;
+            /* Posición superior ajustable */
+            padding-top: var(--top-inicial, 100px);
+        }
+
+        /* Contenedor único para todas las posiciones */
+        #contenedor-unico {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Eliminar todos los estilos de tabla visual */
+        .tabla-cuerpo {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: transparent !important;
+            border: none !important;
+            position: relative;
+        }
+
+        /* Eliminar encabezados */
+        .tabla-cabecera {
+            display: none !important;
+        }
+
+        .fila {
+            display: flex;
+            position: relative;
+            opacity: 0;
+            animation: fadeInRight 0.5s forwards;
+            /* Separación vertical configurable */
+            margin-bottom: var(--separacion-vertical, 0px);
+            /* Posición vertical fija para cada fila */
+            height: var(--altura-fila, 60px);
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .celda {
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            position: absolute;
+        }
+
+        .posicion {
+            font-weight: bold;
+            font-size: 2.2rem;
+            color: #FFD700;
+            justify-content: center;
+            left: var(--pos-x, 310px);
+        }
+
+        .jugador {
+            font-weight: bold;
+            font-size: 2.2rem;
+            justify-content: flex-start;
+            left: var(--jugador-x, 700px);
+        }
+
+        .puntos {
+            font-weight: bold;
+            font-size: 2.2rem;
+            justify-content: center;
+            left: var(--puntos-x, 1450px);
+        }
+
+        .navegacion {
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        #atras {
+            bottom: 0;
+            left: 0;
+        }
+
+        #siguiente {
+            bottom: 0;
+            right: 0;
+        }
+
+        /* Eliminar indicador de páginas */
+        .pagina-indicador {
+            display: none !important;
+        }
+        
+        /* Asegurar visibilidad completa de 10 filas */
+        .tabla-cuerpo {
+            min-height: 800px;
+            overflow: visible !important;
+        }
+
+        #contenedor-unico {
+            overflow: visible !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor único para todas las posiciones -->
+    <div id="contenedor-unico">
+        <div class="tabla-cuerpo" id="cuerpo-unico">
+            <!-- Todas las filas generadas por JS -->
+        </div>
+    </div>
+
+    <!-- Navegación Invisible -->
+    <div class="navegacion" id="atras"></div>
+    <div class="navegacion" id="siguiente"></div>
+
+    <script>
+        // Variables globales
+        let jugadores = new Map(); // Mapa: uId -> {nombre, puntos, wwcd, puntosPosicion, puntosBajas, mejorPosicionUltima}
+        let datosOrdenados = [];
+        let paginaActual = 1;
+        let maxPaginas = 1; // Se calculará dinámicamente
+
+        // CONFIGURACIÓN BACKEND - POSICIONES Y SEPARACIÓN
+        // Valores predeterminados - ajustables para diferentes fondos
+        const configPosiciones = {
+            posX: "310px",      // Posición horizontal de la columna POS
+            jugadorX: "700px",  // Posición horizontal de la columna JUGADOR
+            puntosX: "1450px",   // Posición horizontal de la columna PUNTOS
+            separacionVertical: "-101px", // Separación vertical entre filas
+            alturaFila: "80px", // Altura de cada fila
+            topInicial: "180px" // Posición superior inicial ajustable
+        };
+
+        // Aplicar configuración inicial
+        function aplicarConfiguracion() {
+            document.documentElement.style.setProperty('--pos-x', configPosiciones.posX);
+            document.documentElement.style.setProperty('--jugador-x', configPosiciones.jugadorX);
+            document.documentElement.style.setProperty('--puntos-x', configPosiciones.puntosX);
+            document.documentElement.style.setProperty('--separacion-vertical', configPosiciones.separacionVertical);
+            document.documentElement.style.setProperty('--altura-fila', configPosiciones.alturaFila);
+            document.documentElement.style.setProperty('--top-inicial', configPosiciones.topInicial);
+        }
+
+        // Puntos por posición
+        const puntosPosicion = {
+            1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 1
+        };
+
+        // Función para cargar todos los archivos CSV
+        async function cargarTodosCSV() {
+            let indice = 1;
+            let archivosCargados = 0;
+            const maxIntentos = 50; // Límite para buscar archivos
+
+            while (indice <= maxIntentos) {
+                try {
+                    const respuesta = await fetch(`data/campeon_supremo/partidas/M${indice}.csv`);
+                    if (!respuesta.ok) {
+                        // Si falla, asumimos que no hay más archivos
+                        break;
+                    }
+                    const texto = await respuesta.text();
+                    procesarCSV(texto, indice);
+                    archivosCargados++;
+                    indice++;
+                } catch (error) {
+                    // Error en la carga, probablemente no existe el archivo
+                    break;
+                }
+            }
+
+            if (archivosCargados === 0) {
+                console.error("No se encontraron archivos CSV. Usando datos de ejemplo.");
+                datosDeEjemplo();
+            }
+
+            procesarYOrdenarJugadores();
+            aplicarConfiguracion(); // Aplicar configuración antes de renderizar
+            renderizarPagina(paginaActual);
+        }
+
+        // Procesar un archivo CSV
+        function procesarCSV(textoCSV, numeroPartida) {
+            const lineas = textoCSV.split('\n').filter(linea => linea.trim() !== '');
+            
+            // Detectar encabezado REAL
+            let inicio = 0;
+            if (lineas[0].toLowerCase().includes('uid')) {
+                inicio = 1;
+            }
+
+            for (let i = inicio; i < lineas.length; i++) {
+                const columnas = lineas[i].split(',');
+                if (columnas.length < 7) continue;
+
+                const rango = parseInt(columnas[2]?.trim());
+                const uId = columnas[3]?.trim();
+                const nombre = columnas[4]?.trim() || `Jugador ${uId}`;
+                const bajas = parseInt(columnas[6]?.trim()) || 0;
+
+                if (!uId || isNaN(rango)) continue;
+
+                // Inicializar o actualizar jugador
+                if (!jugadores.has(uId)) {
+                    jugadores.set(uId, {
+                        nombre: nombre,
+                        puntos: 0,
+                        wwcd: 0, // Victorias (rango 1)
+                        puntosPosicion: 0,
+                        puntosBajas: 0,
+                        mejorPosicionUltima: Infinity,
+                        ultimaPartida: numeroPartida
+                    });
+                }
+
+                const jugador = jugadores.get(uId);
+                
+                // Actualizar datos
+                const puntosPorPos = puntosPosicion[rango] || 0;
+                jugador.puntosPosicion += puntosPorPos;
+                jugador.puntosBajas += bajas;
+                jugador.puntos += puntosPorPos + bajas;
+                
+                if (rango === 1) {
+                    jugador.wwcd += 1;
+                }
+                
+                // Actualizar mejor posición en la última partida
+                if (numeroPartida >= jugador.ultimaPartida) {
+                    jugador.ultimaPartida = numeroPartida;
+                    if (rango < jugador.mejorPosicionUltima) {
+                        jugador.mejorPosicionUltima = rango;
+                    }
+                }
+            }
+        }
+
+        // Datos de ejemplo si no hay CSV - AHORA MÁS JUGADORES
+        function datosDeEjemplo() {
+            const nombres = ['Alex', 'Berta', 'Carlos', 'Diana', 'Edu', 'Fátima', 'Gorka', 'Helena', 'Iván', 'Julia', 'Kevin', 'Luna', 'Mario', 'Nora', 'Óscar', 'Paula', 'Quique', 'Rosa', 'Sergio', 'Tania', 'Ulises', 'Vega', 'Wendy', 'Xavier', 'Yolanda', 'Zoe', 'Aitor', 'Bianca', 'César', 'Dámaris', 'Elena', 'Fernando', 'Gabriela', 'Héctor', 'Isabel', 'Javier', 'Karina', 'Luis', 'Marta', 'Nacho'];
+            
+            for (let i = 1; i <= 40; i++) {
+                const uId = `ID${i}`;
+                const nombre = nombres[i-1] || `Jugador ${i}`;
+                const puntosBase = 100 - i * 2 + Math.floor(Math.random() * 20);
+                const wwcd = Math.min(Math.floor(Math.random() * 5), Math.floor(i/5));
+                
+                jugadores.set(uId, {
+                    nombre: nombre,
+                    puntos: puntosBase + wwcd * 10,
+                    wwcd: wwcd,
+                    puntosPosicion: puntosBase * 0.7,
+                    puntosBajas: puntosBase * 0.3,
+                    mejorPosicionUltima: Math.min(8, Math.ceil(i/4)),
+                    ultimaPartida: 3
+                });
+            }
+        }
+
+        // Función de desempate
+        function ordenarJugadores() {
+            const arrayJugadores = Array.from(jugadores.entries()).map(([uId, datos]) => ({
+                uId,
+                ...datos
+            }));
+
+            arrayJugadores.sort((a, b) => {
+                // 1. PUNTOS TOTALES (descendente)
+                if (b.puntos !== a.puntos) return b.puntos - a.puntos;
+                
+                // 2. WWCD (descendente)
+                if (b.wwcd !== a.wwcd) return b.wwcd - a.wwcd;
+                
+                // 3. PUNTOS POR POSICIÓN (descendente)
+                if (b.puntosPosicion !== a.puntosPosicion) return b.puntosPosicion - a.puntosPosicion;
+                
+                // 4. PUNTOS POR ELIMINACIÓN (descendente)
+                if (b.puntosBajas !== a.puntosBajas) return b.puntosBajas - a.puntosBajas;
+                
+                // 5. MEJOR POSICIÓN EN LA ÚLTIMA PARTIDA (ascendente)
+                return a.mejorPosicionUltima - b.mejorPosicionUltima;
+            });
+
+            return arrayJugadores;
+        }
+
+        // Procesar y ordenar jugadores
+        function procesarYOrdenarJugadores() {
+            datosOrdenados = ordenarJugadores();
+            // Calcular maxPaginas dinámicamente basado en la cantidad de jugadores
+            maxPaginas = Math.ceil(datosOrdenados.length / 10);
+        }
+
+        // Renderizar una página específica - SIEMPRE 10 POSICIONES
+        function renderizarPagina(pagina) {
+            if (pagina < 1 || pagina > maxPaginas) return;
+            
+            paginaActual = pagina;
+            
+            // Asegurar altura suficiente para 10 filas
+            const cuerpo = document.getElementById('cuerpo-unico');
+            cuerpo.style.height = "calc(100vh - 40px)"; // Altura fija para vista completa
+            cuerpo.style.overflow = "visible";
+            
+            // Limpiar contenedor
+            cuerpo.innerHTML = '';
+            
+            // Calcular índice de inicio
+            const inicio = (pagina - 1) * 10;
+            
+            // Agregar 10 filas (siempre 10, aunque estén vacías)
+            for (let i = 0; i < 10; i++) {
+                const indiceGlobal = inicio + i;
+                const jugador = datosOrdenados[indiceGlobal];
+                const posicionReal = indiceGlobal + 1;
+                
+                // Animación en cascada - cada fila con delay progresivo
+                setTimeout(() => {
+                    crearFila(jugador, posicionReal, cuerpo, i);
+                }, i * 80); // 80ms de delay entre cada fila para efecto cascada
+            }
+            
+            // Actualizar estado de navegación
+            document.getElementById('siguiente').style.cursor = pagina < maxPaginas ? 'pointer' : 'default';
+            document.getElementById('atras').style.cursor = pagina > 1 ? 'pointer' : 'default';
+        }
+
+        // Crear una fila de tabla - POSICIONES FIJAS
+        function crearFila(jugador, posicion, contenedor, indiceFila) {
+            const fila = document.createElement('div');
+            fila.className = 'fila';
+            
+            // CALCULO FIXED: topInicial es absoluto, no afectado por separación
+            const topInicial = parseInt(configPosiciones.topInicial) || 240;
+            const alturaFila = parseInt(configPosiciones.alturaFila) || 60;
+            // Eliminamos la suma de separacion para el cálculo de top
+            const topPosicion = topInicial + (indiceFila * alturaFila);
+            fila.style.top = `${topPosicion}px`;
+            
+            // Celda de posición
+            const celdaPos = document.createElement('div');
+            celdaPos.className = 'celda posicion';
+            celdaPos.textContent = posicion;
+            
+            // Celda de jugador
+            const celdaJugador = document.createElement('div');
+            celdaJugador.className = 'celda jugador';
+            celdaJugador.textContent = jugador ? jugador.nombre : '';
+            // Ajustar texto largo para que no se corte
+            celdaJugador.style.maxWidth = '700px';
+            celdaJugador.style.overflow = 'hidden';
+            celdaJugador.style.textOverflow = 'ellipsis';
+            
+            // Celda de puntos
+            const celdaPuntos = document.createElement('div');
+            celdaPuntos.className = 'celda puntos';
+            celdaPuntos.textContent = jugador ? jugador.puntos : '';
+            
+            fila.appendChild(celdaPos);
+            fila.appendChild(celdaJugador);
+            fila.appendChild(celdaPuntos);
+            contenedor.appendChild(fila);
+        }
+
+        // Navegación
+        document.getElementById('siguiente').addEventListener('click', () => {
+            if (paginaActual < maxPaginas) {
+                renderizarPagina(paginaActual + 1);
+            }
+        });
+
+        document.getElementById('atras').addEventListener('click', () => {
+            if (paginaActual > 1) {
+                renderizarPagina(paginaActual - 1);
+            }
+        });
+
+        // Inicialización
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarTodosCSV();
+            
+            // También permitir navegación con teclas
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' && paginaActual < maxPaginas) {
+                    renderizarPagina(paginaActual + 1);
+                } else if (e.key === 'ArrowLeft' && paginaActual > 1) {
+                    renderizarPagina(paginaActual - 1);
+                }
+            });
+        });
+
+        // EXPORTAR CONFIGURACIÓN PARA BACKEND
+        // Para modificar las posiciones desde el backend, se pueden ajustar estos valores:
+        window.configuracionPosiciones = configPosiciones;
+        window.aplicarConfiguracion = aplicarConfiguracion;
+        window.renderizarPagina = renderizarPagina;
+    </script>
+</body>
+</html>
