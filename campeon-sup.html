@@ -1,0 +1,2761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rey de Reyes - PUBG Mobile LATAM</title>
+    <link rel="icon" href="https://i.imgur.com/zztjYzN.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script defer data-domain="discord.pubgmobile.lat" src="https://plausible-service.pubgmobile.lat/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
+    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+    
+    <style>
+        :root {
+            --accent-1: #04f88c;
+            --accent-2: #bc5efb;
+            --accent-3: #2c2fd8;
+            --bg: #040444;
+            --muted: #8484a4;
+            --lav: #e2d7ef;
+            --radius: 12px;
+            --dark-blue: #04021b;
+            --blue-gray: #565680;
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+            --success: #04f88c;
+            --danger: #ff4757;
+            --warning: #ff9e00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--lav);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, var(--bg) 0%, #0c0c5a 100%);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(4, 4, 68, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-logo-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+        }
+
+        .loading-logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            animation: colorPulse 2s ease-in-out infinite;
+        }
+
+        .loading-progress {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .loading-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .loading-text {
+            color: var(--lav);
+            margin-top: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        @keyframes colorPulse {
+            0% {
+                filter: grayscale(100%) brightness(0.5);
+                transform: scale(0.95);
+            }
+            50% {
+                filter: grayscale(0%) brightness(1);
+                transform: scale(1);
+            }
+            100% {
+                filter: grayscale(100%) brightness(0.5);
+                transform: scale(0.95);
+            }
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .main-content.hidden {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(4, 4, 68, 0.1) 0%, rgba(4, 4, 68, 0.1) 100%);
+        }
+
+        .site-header {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 90;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+            background: rgba(4, 4, 68, 0.8);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+        }
+
+        .nav-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 12px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            pointer-events: all;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            display: block;
+            font-weight: 700;
+            color: var(--lav);
+            font-size: 18px;
+        }
+
+        .brand-sub {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: var(--lav);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-1);
+        }
+
+        .cta-top {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+            color: var(--dark-blue);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: 0;
+            color: var(--lav);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .hero-section {
+            padding: 180px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(188, 94, 251, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(4, 248, 140, 0.15) 0%, transparent 40%);
+            z-index: -1;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 6vw, 5rem);
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--lav);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            opacity: 0.9;
+        }
+
+        .tournament-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 12px 24px;
+            margin-bottom: 2rem;
+        }
+
+        .tournament-badge i {
+            color: var(--accent-1);
+            font-size: 1.2rem;
+        }
+
+        .tabs-container {
+            background: rgba(4, 4, 68, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0.8rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--lav);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--accent-1);
+            background: rgba(4, 248, 140, 0.1);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--accent-1);
+            border-radius: 2px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .leaderboard-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            background: rgba(4, 4, 68, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .leaderboard-table thead {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .leaderboard-table th {
+            padding: 1.2rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--accent-1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .leaderboard-table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .leaderboard-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .leaderboard-table td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+        }
+
+        .position-cell {
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+            width: 80px;
+        }
+
+        .position-1 { color: var(--gold); }
+        .position-2 { color: var(--silver); }
+        .position-3 { color: var(--bronze); }
+
+        .trend-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            margin-left: 5px;
+            font-size: 0.8rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trend-up {
+            color: var(--success);
+            background: rgba(4, 248, 140, 0.1);
+        }
+
+        .trend-down {
+            color: var(--danger);
+            background: rgba(255, 71, 87, 0.1);
+        }
+
+        .trend-same {
+            color: var(--muted);
+            background: rgba(132, 132, 164, 0.1);
+        }
+
+        .player-cell {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .player-avatar:hover {
+            transform: scale(2.5);
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .player-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-info h4 {
+            color: white;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .player-info span {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-cell {
+            font-weight: 600;
+            color: white;
+            text-align: center;
+        }
+
+        .wwcd-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .top-weapons-section {
+            margin-bottom: 2rem;
+        }
+
+        .top-weapons-container {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .weapon-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .weapon-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-2);
+            box-shadow: 0 10px 20px rgba(188, 94, 251, 0.2);
+        }
+
+        .weapon-icon {
+            font-size: 2.5rem;
+            color: var(--accent-2);
+            margin-bottom: 1rem;
+        }
+
+        .weapon-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .weapon-kills {
+            color: var(--accent-2);
+            font-weight: 800;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .weapon-label {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .comparator-section {
+            background: rgba(4, 4, 68, 0.4);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparator-title {
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparator-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .player-select {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .player-select option {
+            background: var(--bg);
+            color: white;
+        }
+
+        .compare-btn {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+            color: var(--dark-blue);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .compare-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(188, 94, 251, 0.3);
+        }
+
+        .compare-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            min-height: 600px;
+        }
+
+        .players-sidebar {
+            background: rgba(4, 4, 68, 0.4);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .player-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .player-list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .player-list-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .player-list-item.active {
+            background: rgba(4, 248, 140, 0.1);
+            border-color: var(--accent-1);
+        }
+
+        .player-list-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .player-list-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-list-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-list-info h5 {
+            color: white;
+            margin-bottom: 0.1rem;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-list-info span {
+            color: var(--muted);
+            font-size: 0.8rem;
+        }
+
+        .stats-content {
+            background: rgba(4, 4, 68, 0.4);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 600px;
+        }
+
+        .stats-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent-1);
+            flex-shrink: 0;
+        }
+
+        .stats-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stats-player-info h3 {
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+        }
+
+        .stats-player-info p {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .stats-grid-main {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card-main {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card-main:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-value-main {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-1);
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-label-main {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-subvalue {
+            color: var(--lav);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .player-weapons-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .player-weapons-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .player-weapon-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .player-weapon-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-3px);
+        }
+
+        .player-weapon-icon {
+            font-size: 1.8rem;
+            color: var(--accent-2);
+            margin-bottom: 0.5rem;
+        }
+
+        .player-weapon-name {
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-weapon-kills {
+            color: var(--accent-1);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .player-weapon-label {
+            color: var(--muted);
+            font-size: 0.7rem;
+            text-transform: lowercase;
+        }
+
+        .stats-sections {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-section h4 {
+            color: var(--accent-1);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid-detailed {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-item-detailed {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item-detailed:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .stat-label-detailed {
+            color: var(--lav);
+            font-size: 0.9rem;
+        }
+
+        .stat-value-detailed {
+            color: var(--accent-1);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .compare-modal {
+            background: rgba(4, 4, 68, 0.95);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h3 {
+            color: var(--accent-1);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--lav);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--accent-1);
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .compare-table th {
+            padding: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent-1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .compare-table td {
+            padding: 1.2rem 1rem;
+            vertical-align: middle;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .player-compare-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+        }
+
+        .compare-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent-1);
+        }
+
+        .compare-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .compare-player-name {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .stat-label-compare {
+            color: var(--lav);
+            font-size: 0.95rem;
+            text-align: left;
+            padding-left: 1rem;
+        }
+
+        .stat-value-compare {
+            color: var(--accent-1);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .compare-winner {
+            color: var(--success) !important;
+            font-weight: 800;
+        }
+
+        .compare-loser {
+            color: var(--danger) !important;
+        }
+
+        .mvp-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .mvp-section {
+            background: rgba(4, 4, 68, 0.4);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .mvp-section h3 {
+            color: var(--accent-1);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1rem;
+        }
+
+        .mvp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mvp-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .mvp-item:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .mvp-rank {
+            font-size: 1.5rem;
+            font-weight: 800;
+            width: 40px;
+            text-align: center;
+        }
+
+        .rank-1 { color: var(--gold); }
+        .rank-2 { color: var(--silver); }
+        .rank-3 { color: var(--bronze); }
+
+        .mvp-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            flex-shrink: 0;
+        }
+
+        .mvp-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mvp-info {
+            flex: 1;
+        }
+
+        .mvp-info h4 {
+            color: white;
+            margin-bottom: 0.25rem;
+            font-size: 1.1rem;
+        }
+
+        .mvp-stat {
+            color: var(--accent-1);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .mvp-description {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .site-footer {
+            background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+            backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(255,255,255,0.03);
+            z-index: 80;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 0 1.5rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            min-width: 250px;
+            flex: 1;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            color: var(--lav);
+            font-size: 18px;
+        }
+
+        .footer-sub {
+            font-size: 12px;
+            color: var(--muted);
+            max-width: 300px;
+        }
+
+        .copyright {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 1rem;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h4 {
+            font-size: 16px;
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-1);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links li a {
+            color: var(--lav);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li a:hover {
+            color: var(--accent-1);
+        }
+
+        .socials {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .socials a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            color: var(--lav);
+            text-decoration: none;
+            width: 36px;
+            height: 36px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-container {
+                grid-template-columns: 250px 1fr;
+            }
+            .stats-grid-main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .top-weapons-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .footer-inner {
+                gap: 1rem;
+            }
+            .footer-column {
+                min-width: 150px;
+            }
+            .stats-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+            .players-sidebar {
+                max-height: 300px;
+            }
+            .mvp-container {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid-main {
+                grid-template-columns: 1fr;
+            }
+            .stats-sections {
+                grid-template-columns: 1fr;
+            }
+            .top-weapons-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .player-weapons-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .comparator-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .player-select {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                right: 14px;
+                top: 64px;
+                background: linear-gradient(180deg, rgba(4,4,68,0.95), rgba(2,6,23,0.95));
+                padding: 12px;
+                border-radius: 10px;
+                flex-direction: column;
+                min-width: 200px;
+                box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+            }
+            
+            .hamburger {
+                display: inline-flex;
+            }
+            
+            .hero-section {
+                padding: 150px 0 60px;
+            }
+            
+            .tabs-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .tab-btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .tab-btn.active::after {
+                display: none;
+            }
+            
+            .stats-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-inner {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .footer-column {
+                width: 100%;
+            }
+            
+            .footer-links {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .top-weapons-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-weapons-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .compare-table th,
+            .compare-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .leaderboard-table th,
+            .leaderboard-table td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .player-cell {
+                gap: 0.5rem;
+            }
+            
+            .player-avatar {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .stat-value-main {
+                font-size: 2rem;
+            }
+            
+            .mvp-item {
+                padding: 0.75rem;
+            }
+            
+            .mvp-avatar {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid-detailed {
+                grid-template-columns: 1fr;
+            }
+            
+            .weapon-card {
+                padding: 1rem;
+            }
+            
+            .weapon-icon {
+                font-size: 2rem;
+            }
+            
+            .loading-logo-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .loading-progress {
+                width: 150px;
+            }
+        }
+
+        .hidden {
+            transform: translateY(-100%);
+        }
+		.weapon-icon,
+		.player-weapon-icon {
+		display: none !important;
+		}
+    </style>
+</head>
+<body>
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-logo-container">
+            <img src="https://i.imgur.com/zztjYzN.png" alt="Cargando..." class="loading-logo">
+        </div>
+        <div class="loading-progress">
+            <div class="loading-progress-bar" id="loading-progress-bar"></div>
+        </div>
+        <div class="loading-text" id="loading-text">Cargando datos...</div>
+    </div>
+
+    <div id="main-content">
+        <div class="background-animation">
+            <video class="hero-video" autoplay loop muted playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23040444'/%3E%3Cstop offset='100%25' stop-color='%232c2fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23grad)'/%3E%3C/svg%3E">
+                <source src="https://i.imgur.com/T5caTx1.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+
+        <header class="site-header" role="banner" id="mainHeader">
+            <div class="nav-shell">
+                <nav class="nav" role="navigation" aria-label="Navegación principal">
+                    <div class="brand">
+                        <a href="index.html" class="brand-link" aria-label="Discord PUBG Mobile LATAM">
+                            <img src="https://i.imgur.com/zztjYzN.png" alt="Logo PUBG Mobile" class="brand-logo" />
+                        </a>
+                        <div class="brand-text">
+                            <span class="brand-title">Discord PUBG Mobile LATAM</span>
+                            <small class="brand-sub">Eventos y torneos oficiales</small>
+                        </div>
+                    </div>
+
+                    <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú">
+                        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                    </button>
+
+                    <div id="main-nav" class="nav-links" role="menubar">
+                        <a role="menuitem" href="index.html" style="color: var(--accent-1);">Inicio</a>
+                        <a role="menuitem" href="reglas.html">Reglamento</a>
+                        <a role="menuitem" href="resultados.html">Resultados</a>
+                        <a role="menuitem" href="mapas_aleatorios.html">Mapas Aleatorios</a>
+                        <a role="menuitem" href="https://discord.com/channels/433450407730085897/1347296738981052436">Registro Salas Recreativas</a>
+                        <a class="cta-top" href="https://discord.com/invite/pubgmesp" target="_blank" rel="noopener">Unirme al Discord</a>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero-section">
+            <div class="hero-bg"></div>
+            <div class="container">
+                </div>
+                <h1 class="hero-title fade-in">REY DE REYES</h1>
+            </div>
+        </section>
+
+        <section class="tabs-section">
+            <div class="container">
+                <div class="tabs-container fade-in">
+                    <div class="tabs-header">
+                        <button class="tab-btn active" data-tab="tabla-general">
+                            <i class="fas fa-list-ol"></i> Tabla General
+                        </button>
+                        <button class="tab-btn" data-tab="estadisticas">
+                            <i class="fas fa-chart-bar"></i> Estadísticas
+                        </button>
+                        <button class="tab-btn" data-tab="mvp">
+                            <i class="fas fa-crown"></i> MVP
+                        </button>
+                    </div>
+
+                    <div id="tabla-general" class="tab-content active">
+                        <div class="leaderboard-container">
+                            <table class="leaderboard-table" id="leaderboard">
+                                <thead>
+                                    <tr>
+                                        <th>POS</th>
+                                        <th>JUGADOR</th>
+                                        <th>PP</th>
+                                        <th>PE</th>
+                                        <th>TOTAL</th>
+                                        <th>WWCD</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leaderboard-body">
+                                    <tr>
+                                        <td colspan="6" style="text-align: center; padding: 3rem;">
+                                            <div class="loading">Cargando datos del torneo...</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div id="estadisticas" class="tab-content">
+                        <div class="top-weapons-section">
+                            <h2 style="color: var(--accent-2); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class=""></i> Top 5 Armas Más Usadas en el Torneo
+                            </h2>
+                            <div class="top-weapons-container" id="top-weapons-container">
+                                <div class="weapon-card">
+                                    <div class="weapon-icon"><i class="fas fa-question"></i></div>
+                                    <div class="weapon-name">Cargando...</div>
+                                    <div class="weapon-kills">0</div>
+                                    <div class="weapon-label">Eliminaciones</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="comparator-section">
+                            <div class="comparator-title">
+                                <i class=""></i> Comparador de Jugadores
+                            </div>
+                            <div class="comparator-controls">
+                                <select class="player-select" id="compare-player1">
+                                    <option value="">Seleccionar Jugador 1...</option>
+                                </select>
+                                <select class="player-select" id="compare-player2">
+                                    <option value="">Seleccionar Jugador 2...</option>
+                                </select>
+                                <button class="compare-btn" id="compare-players-btn" disabled>
+                                    <i class="fas fa-exchange-alt"></i> Comparar Jugadores
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="stats-container">
+                            <div class="players-sidebar">
+                                <h4 style="color: var(--accent-1); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.1);">Jugadores</h4>
+                                <div class="player-list" id="player-list">
+                                </div>
+                            </div>
+                            
+                            <div class="stats-content">
+                                <div class="stats-header" id="stats-header">
+                                    <div class="stats-avatar">
+                                        <img src="data/campeon_supremo/logos/default.png" alt="Jugador" id="player-avatar">
+                                    </div>
+                                    <div class="stats-player-info">
+                                        <h3 id="player-name">Selecciona un jugador</h3>
+                                    </div>
+                                </div>
+                                
+                                <div class="stats-grid-main" id="stats-grid-main">
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-total-shots">0</div>
+                                        <div class="stat-label-main">Total Disparos</div>
+                                    </div>
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-total-hits">0</div>
+                                        <div class="stat-label-main">Total Impactos</div>
+                                    </div>
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-accuracy">0%</div>
+                                        <div class="stat-label-main">Precisión %</div>
+                                    </div>
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-total-kills">0</div>
+                                        <div class="stat-label-main">Bajas Totales</div>
+                                        <div class="stat-subvalue" id="stat-kills-per-match">0 KD</div>
+                                    </div>
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-total-damage">0</div>
+                                        <div class="stat-label-main">Daño Total</div>
+                                        <div class="stat-subvalue" id="stat-damage-per-match">0 Promedio por Partida</div>
+                                    </div>
+                                    <div class="stat-card-main">
+                                        <div class="stat-value-main" id="stat-headshots">0</div>
+                                        <div class="stat-label-main">Headshots</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="player-weapons-container" id="player-weapons-container">
+                                    <h4 style="color: var(--accent-2); margin-bottom: 1rem;">Top 3 Armas Más Usadas</h4>
+                                    <div class="player-weapons-grid" id="player-weapons-grid">
+                                        <div class="player-weapon-item">
+                                            <div class="player-weapon-icon"><i class="fas fa-question"></i></div>
+                                            <div class="player-weapon-name">Sin datos</div>
+                                            <div class="player-weapon-kills">0</div>
+                                            <div class="player-weapon-label">eliminaciones</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="stats-sections">
+                                    <div class="stats-section">
+                                        <h4>Estadísticas de Tiro</h4>
+                                        <div class="stats-grid-detailed">
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Total Disparos</span>
+                                                <span class="stat-value-detailed" id="detail-total-shots">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Total Impactos</span>
+                                                <span class="stat-value-detailed" id="detail-total-hits">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Precisión %</span>
+                                                <span class="stat-value-detailed" id="detail-accuracy">0%</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Impactos a la Cabeza</span>
+                                                <span class="stat-value-detailed" id="detail-head-hits">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Impactos al cuerpo</span>
+                                                <span class="stat-value-detailed" id="detail-body-hits">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Impactos a Extremidades</span>
+                                                <span class="stat-value-detailed" id="detail-limbs-hits">0</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stats-section">
+                                        <h4>Estadísticas Detalladas</h4>
+                                        <div class="stats-grid-detailed">
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Bajas</span>
+                                                <span class="stat-value-detailed" id="detail-kills">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Daño</span>
+                                                <span class="stat-value-detailed" id="detail-damage">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Headshots</span>
+                                                <span class="stat-value-detailed" id="detail-headshots">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Noqueos</span>
+                                                <span class="stat-value-detailed" id="detail-knocks">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Máx. Distancia Baja</span>
+                                                <span class="stat-value-detailed" id="detail-max-distance">0m</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Daño Recibido</span>
+                                                <span class="stat-value-detailed" id="detail-damage-taken">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Curación</span>
+                                                <span class="stat-value-detailed" id="detail-healing">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Tiempo Supervivencia</span>
+                                                <span class="stat-value-detailed" id="detail-survival-time">0m</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Bajas con Granada</span>
+                                                <span class="stat-value-detailed" id="detail-grenade-kills">0</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Distancia Conducida</span>
+                                                <span class="stat-value-detailed" id="detail-distance-driven">0m</span>
+                                            </div>
+                                            <div class="stat-item-detailed">
+                                                <span class="stat-label-detailed">Distancia Recorrida</span>
+                                                <span class="stat-value-detailed" id="detail-distance-traveled">0m</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mvp" class="tab-content">
+                        <div class="mvp-container">
+                            <div class="mvp-section">
+                                <h3><i class=""></i> Top 5 - Más Eliminaciones</h3>
+                                <div class="mvp-list" id="top-kills">
+                                </div>
+                            </div>
+                            
+                            <div class="mvp-section">
+                                <h3><i class=""></i> Top 5 - Eliminación Más Lejana</h3>
+                                <div class="mvp-list" id="top-distance">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="modal-overlay" id="compare-modal">
+            <div class="compare-modal">
+                <div class="modal-header">
+                    <h3><i class="fas fa-balance-scale"></i> Comparación de Jugadores</h3>
+                    <button class="close-modal" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-content">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th id="compare-player1-header">Jugador 1</th>
+                                <th>Estadísticas</th>
+                                <th id="compare-player2-header">Jugador 2</th>
+                            </tr>
+                        </thead>
+                        <tbody id="compare-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer class="site-footer" role="contentinfo" aria-label="Pie de página">
+            <div class="footer-inner">
+                <div class="footer-left">
+                    <div class="footer-brand">
+                        <img src="https://i.imgur.com/zztjYzN.png" alt="Logo PUBG Mobile LATAM" class="footer-logo" />
+                        <div>
+                            <div class="footer-title">PUBG Mobile LATAM</div>
+                            <div class="footer-sub">Información de eventos y torneos del servidor Discord oficial de PUBG Mobile LATAM</div>
+                        </div>
+                    </div>
+                    <div class="socials">
+                         <a href="https://www.facebook.com/PUBGMOBILE.LATAM.OFFICIAL/" target="_blank" rel="noopener" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.09 5.66 21.19 10.44 22v-7.04H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.76-3.88 1.09 0 2.23.20 2.23.20v2.45h-1.25c-1.23 0-1.61.76-1.61 1.53v1.85h2.74l-.44 2.9h-2.3V22C18.34 21.19 22 17.09 22 12.07z" fill="currentColor"/></svg>
+                        </a>
+                        <a href="https://instagram.com/pubgmobile.latam" target="_blank" rel="noopener" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+                        </a>
+                        <a href="https://tiktok.com/@pubgmobile.latam" target="_blank" rel="noopener" aria-label="TikTok">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 8.1a4 4 0 0 1-4-4v10.6A4 4 0 1 1 8 14V8" stroke="currentColor" stroke-width="1.3" fill="none"/><path d="M20 8v1.6A4 4 0 1 1 18 16" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
+                        </a>
+                        <a href="https://www.youtube.com/c/PUBGMOBILELATAM/" target="_blank" rel="noopener" aria-label="YouTube">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22.54 6.42a2.7 2.7 0 0 0-1.9-1.91C18.8 4 12 4 12 4s-6.8 0-8.64.51A2.7 2.7 0 0 0 1.46 6.42A28.6 28.6 0 0 0 1 12a28.6 28.6 0 0 0 .46 5.58 2.7 2.7 0 0 0 1.9 1.91C5.2 20 12 20 12 20s6.8 0 8.64-.51a2.7 2.7 0 0 0 1.9-1.91A28.6 28.6 0 0 0 23 12a28.6 28.6 0 0 0-.46-5.58z" fill="currentColor"/><path d="M10 15V9l5 3-5 3z" fill="currentColor"/></svg>
+                        </a>
+                        <a href="https://www.twitch.tv/pubgmobilees" target="_blank" rel="noopener" aria-label="Twitch">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 3h14l-2 4v9H8l-4 4V3z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M16 8v5M12 8v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                        </a>
+                        <a href="https://x.com/PUBGMOBILELATAM" target="_blank" rel="noopener" aria-label="X">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                        </a>
+                    </div>
+                    <div class="copyright">© 2025 PUBG Mobile LATAM — Todos los derechos reservados</div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://pubgmobile.com/redeem" target="_blank">Canje de códigos</a></li>
+                        <li><a href="https://discord.com/invite/pubgmesp" target="_blank">Discord Oficial</a></li>
+                        <li><a href="https://m.kwai.com/user/@PUBGMLATAM?fid=150001031460098..." target="_blank">Kwai</a></li>
+                        <li><a href="https://www.midasbuy.com/midasbuy/buy/pubgm" target="_blank">Compra de UC</a></li>
+                        <li><a href="https://www.pubgmobile.com/es/home.shtml" target="_blank">Página Oficial</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Esports</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://www.facebook.com/PUBGMOBILEESPORTSLATAM" id="show-leaderboard">Facebook Esports</a></li>
+                        <li><a href="https://www.instagram.com/esportspubgmobile.latam" id="show-stats">Instagram Esports</a></li>
+                        <li><a href="https://esports.pubgmobile.com/#/index" id="show-mvp">Sitio Oficial Global</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Soporte</h4>
+                    <ul class="footer-links">
+                        <li><a href="https://discord.com/channels/433450407730085897/630636655568617472">Guía del Servidor</a></li>
+                        <li><a href="https://discord.com/channels/433450407730085897/1261084867089928284">Tickets de Asistencia</a></li>
+                        <li><a href="https://pubgmobile.lat/soporte">Reportar Errores</a></li>
+                        <li><a href="https://discord.com/channels/433450407730085897/636716258565423118">Preguntas Frecuentes</a></li>
+                        <li><a href="https://www.pubgmobile.com/terms/ESP">Términos y Condiciones PUBGM</a></li>
+                    </ul>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let currentLoadingProgress = 0;
+        const mainContent = document.getElementById('main-content');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const loadingProgressBar = document.getElementById('loading-progress-bar');
+        const loadingText = document.getElementById('loading-text');
+
+        function showLoading(text = 'Cargando datos...') {
+            if (loadingOverlay) loadingOverlay.classList.remove('hidden');
+            if (mainContent) mainContent.classList.add('hidden');
+            currentLoadingProgress = 0;
+            updateLoadingProgress(0, text);
+        }
+
+        function hideLoading() {
+            if (loadingOverlay) loadingOverlay.classList.add('hidden');
+            if (mainContent) mainContent.classList.remove('hidden');
+        }
+
+        function updateLoadingProgress(percent, text = null) {
+            currentLoadingProgress = Math.min(percent, 100);
+            if (loadingProgressBar) {
+                loadingProgressBar.style.width = `${currentLoadingProgress}%`;
+            }
+            if (text && loadingText) {
+                loadingText.textContent = text;
+            }
+        }
+
+        let playersData = {};
+        let playerLogos = {};
+        let playerNamesFromLogos = {}; 
+        let leaderboardData = [];
+        let previousLeaderboard = [];
+        let weaponStats = {}; 
+        let playerWeapons = {}; 
+        
+        const positionPoints = {
+            1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 1
+        };
+
+        const weaponIcons = {
+            'M416': 'fas fa-gun',
+            'AKM': 'fas fa-gun',
+            'M762': 'fas fa-gun',
+            'SCAR-L': 'fas fa-gun',
+            'UMP45': 'fas fa-gun',
+            'Vector': 'fas fa-gun',
+            'Kar98k': 'fas fa-bullseye',
+            'M24': 'fas fa-bullseye',
+            'AWM': 'fas fa-bullseye',
+            'SKS': 'fas fa-bullseye',
+            'Mini14': 'fas fa-bullseye',
+            'DP-28': 'fas fa-gun',
+            'M249': 'fas fa-gun',
+            'S12K': 'fas fa-gun',
+            'S686': 'fas fa-gun',
+            'Pan': 'fas fa-utensils',
+            'Grenade': 'fas fa-bomb',
+            'default': 'fas fa-question'
+        };
+
+        function formatNumber(num) {
+            if (num === null || num === undefined || isNaN(num)) return '0';
+            return Math.round(num).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function formatDecimal(num, decimals = 1) {
+            if (num === null || num === undefined || isNaN(num)) return '0.0';
+            return parseFloat(num).toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('main-nav');
+        const mainHeader = document.getElementById('mainHeader');
+        let lastScrollY = window.scrollY;
+        
+        hamburger.addEventListener('click', () => {
+            const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', String(!expanded));
+            if(!expanded){
+                nav.style.display = 'flex';
+                nav.setAttribute('data-open','true');
+            } else {
+                nav.style.display = '';
+                nav.removeAttribute('data-open');
+            }
+        });
+        
+        document.addEventListener('click', (e) => {
+            if(window.innerWidth <= 768){
+                if(!nav.contains(e.target) && !hamburger.contains(e.target)){
+                    nav.style.display = '';
+                    hamburger.setAttribute('aria-expanded','false');
+                }
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape' && nav.getAttribute('data-open') === 'true'){
+                nav.style.display = '';
+                hamburger.setAttribute('aria-expanded','false');
+                hamburger.focus();
+            }
+        });
+        
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                mainHeader.classList.add('hidden');
+            } else {
+                mainHeader.classList.remove('hidden');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.dataset.tab;
+                
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        document.getElementById('show-leaderboard').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('[data-tab="tabla-general"]').click();
+        });
+        
+        document.getElementById('show-stats').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('[data-tab="estadisticas"]').click();
+        });
+        
+        document.getElementById('show-mvp').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelector('[data-tab="mvp"]').click();
+        });
+
+        const compareModal = document.getElementById('compare-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const compareBtn = document.getElementById('compare-players-btn');
+        const player1Select = document.getElementById('compare-player1');
+        const player2Select = document.getElementById('compare-player2');
+
+        closeModalBtn.addEventListener('click', () => {
+            compareModal.classList.remove('active');
+        });
+
+        compareModal.addEventListener('click', (e) => {
+            if (e.target === compareModal) {
+                compareModal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && compareModal.classList.contains('active')) {
+                compareModal.classList.remove('active');
+            }
+        });
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+                
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+
+        function parseSurvivalTime(timeStr) {
+            if (!timeStr || timeStr === '' || timeStr === '0') return 0;
+            
+            if (!isNaN(timeStr)) return parseFloat(timeStr);
+            
+            let totalSeconds = 0;
+            
+            const minutesMatch = timeStr.match(/(\d+)\s*m/);
+            const secondsMatch = timeStr.match(/(\d+)\s*s/);
+            
+            if (minutesMatch) {
+                totalSeconds += parseInt(minutesMatch[1]) * 60;
+            }
+            
+            if (secondsMatch) {
+                totalSeconds += parseInt(secondsMatch[1]);
+            }
+            
+            if (totalSeconds === 0 && !isNaN(parseFloat(timeStr))) {
+                return parseFloat(timeStr);
+            }
+            
+            return totalSeconds;
+        }
+
+        function formatSurvivalTime(seconds) {
+            if (!seconds || seconds === 0) return "0m";
+            
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = Math.floor(seconds % 60);
+            
+            if (remainingSeconds === 0) {
+                return `${formatNumber(minutes)}m`;
+            }
+            return `${formatNumber(minutes)}m ${formatNumber(remainingSeconds)}s`;
+        }
+
+        function processWeaponData(weaponString) {
+            if (!weaponString || weaponString === '') return {};
+            
+            const weapons = {};
+            const weaponPairs = weaponString.split(';').filter(pair => pair.includes(':'));
+            
+            weaponPairs.forEach(pair => {
+                const [weapon, kills] = pair.split(':');
+                if (weapon && kills) {
+                    const weaponName = weapon.trim();
+                    const killCount = parseInt(kills.trim()) || 0;
+                    
+                    if (killCount > 0) {
+                        weapons[weaponName] = (weapons[weaponName] || 0) + killCount;
+                    }
+                }
+            });
+            
+            return weapons;
+        }
+
+        async function loadAllData() {
+            showLoading('Cargando datos del torneo...');
+            try {
+                updateLoadingProgress(20, 'Cargando logos y nombres...');
+                await loadLogos();
+                
+                updateLoadingProgress(40, 'Cargando partidas...');
+                await loadMatches();
+                
+                updateLoadingProgress(60, 'Procesando datos...');
+                processLeaderboard();
+                processWeaponStats();
+                
+                updateLoadingProgress(80, 'Actualizando interfaz...');
+                updateLeaderboard();
+                updatePlayerList();
+                updateTopWeapons();
+                updateMVP();
+                updateCompareSelectors();
+                
+                updateLoadingProgress(100, '¡Datos cargados!');
+                setTimeout(hideLoading, 500);
+                
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                hideLoading();
+                document.getElementById('leaderboard-body').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem; color: var(--danger);">
+                            Error cargando datos del torneo: ${error.message}
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function loadLogos() {
+            try {
+                const response = await fetch('data/campeon_supremo/logos/logos.csv?nocache=' + Date.now());
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim() === '') continue;
+                    
+                    const [uid, nombre, logo] = parseCSVLine(lines[i]);
+                    if (uid && uid.trim() !== '') {
+                        const uidTrimmed = uid.trim();
+                        if (nombre && nombre.trim() !== '') {
+                            playerNamesFromLogos[uidTrimmed] = nombre.trim();
+                        }
+                        if (logo && logo.trim() !== '') {
+                            playerLogos[uidTrimmed] = logo.trim();
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error cargando logos:', error);
+            }
+        }
+
+        async function loadMatches() {
+            const matches = [];
+            
+            // Cargar 10 partidas
+            for (let i = 1; i <= 10; i++) {
+                try {
+                    updateLoadingProgress(40 + (i * 2), `Cargando partida ${i}/10...`);
+                    const response = await fetch(`data/campeon_supremo/partidas/M${i}.csv?nocache=` + Date.now());
+                    if (!response.ok) continue;
+                    
+                    const csvText = await response.text();
+                    const lines = csvText.split('\n');
+                    
+                    if (lines.length < 2) continue;
+                    
+                    const headers = parseCSVLine(lines[0]).map(h => h.trim());
+                    
+                    for (let j = 1; j < lines.length; j++) {
+                        if (lines[j].trim() === '') continue;
+                        
+                        const values = parseCSVLine(lines[j]);
+                        const row = {};
+                        
+                        headers.forEach((header, index) => {
+                            if (index < values.length) {
+                                row[header] = values[index] ? values[index].trim() : '';
+                            } else {
+                                row[header] = '';
+                            }
+                        });
+                        
+                        matches.push({
+                            match: i,
+                            data: row
+                        });
+                    }
+                } catch (error) {
+                    console.warn(`Error cargando partida M${i}:`, error);
+                }
+            }
+            
+            weaponStats = {};
+            
+            matches.forEach(match => {
+                const data = match.data;
+                const uid = data.uId || data.UID || data.uid;
+                
+                if (!uid || uid.trim() === '') return;
+                
+                const uidTrimmed = uid.trim();
+                
+                if (!playersData[uidTrimmed]) {
+                    let playerName = "Jugador Desconocido";
+                    
+                    if (playerNamesFromLogos[uidTrimmed]) {
+                        playerName = playerNamesFromLogos[uidTrimmed];
+                    } else {
+                        const nameFromMatch = data["Nombre del Jugador"] || data.Nombre || data.nombre || data.Player || data.player || "";
+                        if (nameFromMatch && nameFromMatch.trim() !== "") {
+                            playerName = nameFromMatch.trim();
+                        }
+                    }
+                    
+                    playersData[uidTrimmed] = {
+                        uid: uidTrimmed,
+                        name: playerName,
+                        matches: 0,
+                        kills: 0,
+                        damage: 0,
+                        headshots: 0,
+                        knocks: 0,
+                        assists: 0,
+                        totalShots: 0,
+                        totalHits: 0,
+                        headHits: 0,
+                        bodyHits: 0,
+                        limbsHits: 0,
+                        wwcd: 0,
+                        maxDistance: 0,
+                        damageTaken: 0,
+                        healing: 0,
+                        survivalTime: 0, 
+                        grenadeKills: 0,
+                        distanceDriven: 0,
+                        distanceTraveled: 0,
+                        positions: [],
+                        positionPoints: 0,
+                        killPoints: 0,
+                        totalPoints: 0,
+                        accuracy: 0,
+                        weaponKills: {} 
+                    };
+                    
+                    playerWeapons[uidTrimmed] = {};
+                }
+                
+                const player = playersData[uidTrimmed];
+                
+                const getNumber = (field) => {
+                    const value = data[field];
+                    if (!value || value === '') return 0;
+                    const cleaned = value.toString().replace(/[^\d.-]/g, '');
+                    const num = parseFloat(cleaned);
+                    return isNaN(num) ? 0 : num;
+                };
+                
+                const rank = getNumber("Rango");
+                const kills = getNumber("Número de Bajas");
+                const damage = getNumber("Daño");
+                const headshots = getNumber("Número de Headshots");
+                const knocks = getNumber("Noqueos");
+                const assists = getNumber("Asistencias");
+                const totalShots = getNumber("TotalShots");
+                const totalHits = getNumber("TotalHits");
+                const headHits = getNumber("HeadHits");
+                const bodyHits = getNumber("BodyHits");
+                const limbsHits = getNumber("LimbsHits");
+                const maxDistance = getNumber("Máxima Distancia de Baja");
+                const damageTaken = getNumber("Daño Recibido");
+                const healing = getNumber("Curación");
+                const survivalTimeStr = data["Tiempo de Supervivencia"] || "0";
+                const grenadeKills = getNumber("Bajas con Granada");
+                const distanceDriven = getNumber("Distancia Conducida");
+                const distanceTraveled = getNumber("Distancia Recorrida");
+                
+                const weaponData = data["WeaponKills"] || "";
+                const playerWeaponData = processWeaponData(weaponData);
+                
+                Object.keys(playerWeaponData).forEach(weapon => {
+                    player.weaponKills[weapon] = (player.weaponKills[weapon] || 0) + playerWeaponData[weapon];
+                    playerWeapons[uidTrimmed] = player.weaponKills;
+                    
+                    weaponStats[weapon] = (weaponStats[weapon] || 0) + playerWeaponData[weapon];
+                });
+                
+                const survivalTime = parseSurvivalTime(survivalTimeStr);
+                
+                player.matches++;
+                player.kills += kills;
+                player.damage += damage;
+                player.headshots += headshots;
+                player.knocks += knocks;
+                player.assists += assists;
+                player.totalShots += totalShots;
+                player.totalHits += totalHits;
+                player.headHits += headHits;
+                player.bodyHits += bodyHits;
+                player.limbsHits += limbsHits;
+                player.maxDistance = Math.max(player.maxDistance, maxDistance);
+                player.damageTaken += damageTaken;
+                player.healing += healing;
+                player.survivalTime += survivalTime;
+                player.grenadeKills += grenadeKills;
+                player.distanceDriven += distanceDriven;
+                player.distanceTraveled += distanceTraveled;
+                
+                if (rank > 0) {
+                    player.positions.push(rank);
+                }
+                
+                if (rank >= 1 && rank <= 8) {
+                    player.positionPoints += positionPoints[rank];
+                }
+                
+                player.killPoints += kills;
+                
+                if (rank === 1) {
+                    player.wwcd++;
+                }
+            });
+            
+            Object.values(playersData).forEach(player => {
+                player.totalPoints = player.positionPoints + player.killPoints;
+                
+                if (player.totalShots > 0) {
+                    player.accuracy = ((player.totalHits / player.totalShots) * 100).toFixed(1);
+                } else {
+                    player.accuracy = "0.0";
+                }
+                
+                if (player.matches > 0) {
+                    player.killsPerMatch = (player.kills / player.matches).toFixed(2);
+                    player.damagePerMatch = (player.damage / player.matches).toFixed(0);
+                    player.survivalTimePerMatch = formatSurvivalTime(player.survivalTime / player.matches);
+                } else {
+                    player.killsPerMatch = "0.00";
+                    player.damagePerMatch = "0";
+                    player.survivalTimePerMatch = "0m";
+                }
+            });
+        }
+
+        function processWeaponStats() {
+            const weaponArray = Object.entries(weaponStats)
+                .map(([weapon, kills]) => ({ weapon, kills }))
+                .sort((a, b) => b.kills - a.kills);
+            
+            return weaponArray;
+        }
+
+        function getPlayerTopWeapons(uid, limit = 3) {
+            if (!playerWeapons[uid]) return [];
+            
+            return Object.entries(playerWeapons[uid])
+                .map(([weapon, kills]) => ({ weapon, kills }))
+                .sort((a, b) => b.kills - a.kills)
+                .slice(0, limit);
+        }
+
+        function processLeaderboard() {
+            if (leaderboardData.length > 0) {
+                previousLeaderboard = [...leaderboardData];
+            }
+            
+            leaderboardData = Object.values(playersData)
+                .filter(player => player.matches > 0)
+                .sort((a, b) => b.totalPoints - a.totalPoints);
+        }
+
+        function getTrendIcon(currentIndex, playerUid) {
+            if (previousLeaderboard.length === 0) return '';
+            
+            const previousIndex = previousLeaderboard.findIndex(p => p.uid === playerUid);
+            
+            if (previousIndex === -1) {
+                return '<span class="trend-icon trend-up"><i class="fas fa-plus"></i></span>';
+            }
+            
+            if (currentIndex < previousIndex) {
+                return '<span class="trend-icon trend-up"><i class="fas fa-arrow-up"></i></span>';
+            } else if (currentIndex > previousIndex) {
+                return '<span class="trend-icon trend-down"><i class="fas fa-arrow-down"></i></span>';
+            } else {
+                return '<span class="trend-icon trend-same"><i class="fas fa-equals"></i></span>';
+            }
+        }
+
+        function updateLeaderboard() {
+            const tbody = document.getElementById('leaderboard-body');
+            
+            if (leaderboardData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 3rem;">
+                            No hay datos disponibles
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            leaderboardData.forEach((player, index) => {
+                const position = index + 1;
+                const logoUrl = playerLogos[player.uid] || 'data/campeon_supremo/logos/default.png';
+                const trendIcon = getTrendIcon(index, player.uid);
+                
+                html += `
+                    <tr>
+                        <td class="position-cell position-${position}">
+                            ${position}
+                            ${trendIcon}
+                        </td>
+                        <td>
+                            <div class="player-cell">
+                                <div class="player-avatar">
+                                    <img src="${logoUrl}" alt="${player.name}" onerror="this.src='data/campeon_supremo/logos/default.png'">
+                                </div>
+                                <div class="player-info">
+                                    <h4>${player.name}</h4>
+                                    <span>${player.matches} partidas</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="stat-cell">${formatNumber(player.positionPoints)}</td>
+                        <td class="stat-cell">${formatNumber(player.killPoints)}</td>
+                        <td class="stat-cell" style="color: var(--accent-1); font-size: 1.2rem;">${formatNumber(player.totalPoints)}</td>
+                        <td class="wwcd-cell">${formatNumber(player.wwcd)}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
+        }
+
+        function updatePlayerList() {
+            const playerList = document.getElementById('player-list');
+            
+            if (leaderboardData.length === 0) {
+                playerList.innerHTML = '<div style="color: var(--muted); text-align: center; padding: 2rem;">No hay jugadores</div>';
+                return;
+            }
+            
+            let html = '';
+            
+            leaderboardData.forEach((player, index) => {
+                const logoUrl = playerLogos[player.uid] || 'data/campeon_supremo/logos/default.png';
+                const position = index + 1;
+                
+                html += `
+                    <div class="player-list-item" data-uid="${player.uid}">
+                        <div class="player-list-avatar">
+                            <img src="${logoUrl}" alt="${player.name}" onerror="this.src='data/campeon_supremo/logos/default.png'">
+                        </div>
+                        <div class="player-list-info">
+                            <h5>${player.name}</h5>
+                            <span>Posición #${position} • ${formatNumber(player.totalPoints)} pts</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            playerList.innerHTML = html;
+            
+            document.querySelectorAll('.player-list-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const uid = item.dataset.uid;
+                    showPlayerStats(uid);
+                    
+                    document.querySelectorAll('.player-list-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                });
+            });
+            
+            if (leaderboardData.length > 0) {
+                const firstItem = document.querySelector('.player-list-item');
+                if (firstItem) {
+                    firstItem.classList.add('active');
+                    showPlayerStats(leaderboardData[0].uid);
+                }
+            }
+        }
+
+        function showPlayerStats(uid) {
+            const player = playersData[uid];
+            if (!player) return;
+            
+            const logoUrl = playerLogos[uid] || 'data/campeon_supremo/logos/default.png';
+            
+            document.getElementById('player-avatar').src = logoUrl;
+            document.getElementById('player-name').textContent = player.name;
+            
+            document.getElementById('stat-total-shots').textContent = formatNumber(player.totalShots);
+            document.getElementById('stat-total-hits').textContent = formatNumber(player.totalHits);
+            document.getElementById('stat-accuracy').textContent = player.accuracy + '%';
+            document.getElementById('stat-total-kills').textContent = formatNumber(player.kills);
+            document.getElementById('stat-kills-per-match').textContent = player.killsPerMatch + ' KD';
+            document.getElementById('stat-total-damage').textContent = formatNumber(player.damage);
+            document.getElementById('stat-damage-per-match').textContent = formatNumber(player.damagePerMatch) + ' Promedio por Partida';
+            document.getElementById('stat-headshots').textContent = formatNumber(player.headshots);
+            
+            document.getElementById('detail-total-shots').textContent = formatNumber(player.totalShots);
+            document.getElementById('detail-total-hits').textContent = formatNumber(player.totalHits);
+            document.getElementById('detail-accuracy').textContent = player.accuracy + '%';
+            document.getElementById('detail-head-hits').textContent = formatNumber(player.headHits);
+            document.getElementById('detail-body-hits').textContent = formatNumber(player.bodyHits);
+            document.getElementById('detail-limbs-hits').textContent = formatNumber(player.limbsHits);
+            document.getElementById('detail-kills').textContent = formatNumber(player.kills);
+            document.getElementById('detail-damage').textContent = formatNumber(player.damage);
+            document.getElementById('detail-headshots').textContent = formatNumber(player.headshots);
+            document.getElementById('detail-knocks').textContent = formatNumber(player.knocks);
+            document.getElementById('detail-max-distance').textContent = formatNumber(player.maxDistance) + 'm';
+            document.getElementById('detail-damage-taken').textContent = formatNumber(player.damageTaken);
+            document.getElementById('detail-healing').textContent = formatNumber(player.healing);
+            document.getElementById('detail-survival-time').textContent = formatSurvivalTime(player.survivalTime);
+            document.getElementById('detail-grenade-kills').textContent = formatNumber(player.grenadeKills);
+            document.getElementById('detail-distance-driven').textContent = formatNumber(player.distanceDriven) + 'm';
+            document.getElementById('detail-distance-traveled').textContent = formatNumber(player.distanceTraveled) + 'm';
+            
+            updatePlayerWeapons(uid);
+        }
+
+        function updatePlayerWeapons(uid) {
+            const playerWeaponsGrid = document.getElementById('player-weapons-grid');
+            const topWeapons = getPlayerTopWeapons(uid, 3);
+            
+            if (topWeapons.length === 0) {
+                playerWeaponsGrid.innerHTML = `
+                    <div class="player-weapon-item">
+                        <div class="player-weapon-icon"><i class="fas fa-question"></i></div>
+                        <div class="player-weapon-name">Sin datos de armas</div>
+                        <div class="player-weapon-kills">0</div>
+                        <div class="player-weapon-label">eliminaciones</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            topWeapons.forEach(weaponData => {
+                const iconClass = weaponIcons[weaponData.weapon] || weaponIcons.default;
+                
+                html += `
+                    <div class="player-weapon-item">
+                        <div class="player-weapon-icon"><i class="${iconClass}"></i></div>
+                        <div class="player-weapon-name">${weaponData.weapon}</div>
+                        <div class="player-weapon-kills">${formatNumber(weaponData.kills)}</div>
+                        <div class="player-weapon-label">eliminaciones</div>
+                    </div>
+                `;
+            });
+            
+            playerWeaponsGrid.innerHTML = html;
+        }
+
+        function updateTopWeapons() {
+            const topWeaponsContainer = document.getElementById('top-weapons-container');
+            const topWeapons = processWeaponStats().slice(0, 5);
+            
+            if (topWeapons.length === 0) {
+                topWeaponsContainer.innerHTML = `
+                    <div class="weapon-card">
+                        <div class="weapon-icon"><i class="fas fa-question"></i></div>
+                        <div class="weapon-name">Sin datos de armas</div>
+                        <div class="weapon-kills">0</div>
+                        <div class="weapon-label">Eliminaciones</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            topWeapons.forEach((weaponData, index) => {
+                const iconClass = weaponIcons[weaponData.weapon] || weaponIcons.default;
+                
+                html += `
+                    <div class="weapon-card">
+                        <div class="weapon-icon"><i class="${iconClass}"></i></div>
+                        <div class="weapon-name">${weaponData.weapon}</div>
+                        <div class="weapon-kills">${formatNumber(weaponData.kills)}</div>
+                        <div class="weapon-label">Eliminaciones</div>
+                    </div>
+                `;
+            });
+            
+            topWeaponsContainer.innerHTML = html;
+        }
+
+        function updateMVP() {
+            const topKills = Object.values(playersData)
+                .filter(p => p.kills > 0)
+                .sort((a, b) => b.kills - a.kills)
+                .slice(0, 5);
+            
+            const topDistance = Object.values(playersData)
+                .filter(p => p.maxDistance > 0)
+                .sort((a, b) => b.maxDistance - a.maxDistance)
+                .slice(0, 5);
+            
+            const topKillsContainer = document.getElementById('top-kills');
+            topKillsContainer.innerHTML = topKills.map((player, index) => {
+                const logoUrl = playerLogos[player.uid] || 'data/campeon_supremo/logos/default.png';
+                const rankClass = `rank-${index + 1}`;
+                
+                return `
+                    <div class="mvp-item">
+                        <div class="mvp-rank ${rankClass}">${index + 1}</div>
+                        <div class="mvp-avatar">
+                            <img src="${logoUrl}" alt="${player.name}" onerror="this.src='data/campeon_supremo/logos/default.png'">
+                        </div>
+                        <div class="mvp-info">
+                            <h4>${player.name}</h4>
+                            <div class="mvp-stat">${formatNumber(player.kills)} eliminaciones</div>
+                            <div class="mvp-description">${formatNumber(player.totalPoints)} puntos totales</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            const topDistanceContainer = document.getElementById('top-distance');
+            topDistanceContainer.innerHTML = topDistance.map((player, index) => {
+                const logoUrl = playerLogos[player.uid] || 'data/campeon_supremo/logos/default.png';
+                const rankClass = `rank-${index + 1}`;
+                
+                return `
+                    <div class="mvp-item">
+                        <div class="mvp-rank ${rankClass}">${index + 1}</div>
+                        <div class="mvp-avatar">
+                            <img src="${logoUrl}" alt="${player.name}" onerror="this.src='data/campeon_supremo/logos/default.png'">
+                        </div>
+                        <div class="mvp-info">
+                            <h4>${player.name}</h4>
+                            <div class="mvp-stat">${formatNumber(player.maxDistance)}m</div>
+                            <div class="mvp-description">Distancia más larga</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateCompareSelectors() {
+            while (player1Select.options.length > 1) player1Select.remove(1);
+            while (player2Select.options.length > 1) player2Select.remove(1);
+            
+            leaderboardData.forEach(player => {
+                const option1 = document.createElement('option');
+                option1.value = player.uid;
+                option1.textContent = `${player.name} (${formatNumber(player.totalPoints)} pts)`;
+                player1Select.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = player.uid;
+                option2.textContent = `${player.name} (${formatNumber(player.totalPoints)} pts)`;
+                player2Select.appendChild(option2);
+            });
+            
+            function updateCompareButton() {
+                const player1Selected = player1Select.value !== '';
+                const player2Selected = player2Select.value !== '';
+                const differentPlayers = player1Select.value !== player2Select.value;
+                
+                compareBtn.disabled = !(player1Selected && player2Selected && differentPlayers);
+            }
+            
+            player1Select.addEventListener('change', updateCompareButton);
+            player2Select.addEventListener('change', updateCompareButton);
+            
+            compareBtn.addEventListener('click', showCompareModal);
+        }
+
+        function showCompareModal() {
+            const player1Uid = player1Select.value;
+            const player2Uid = player2Select.value;
+            
+            if (!player1Uid || !player2Uid || player1Uid === player2Uid) return;
+            
+            const player1 = playersData[player1Uid];
+            const player2 = playersData[player2Uid];
+            
+            if (!player1 || !player2) return;
+            
+            document.getElementById('compare-player1-header').innerHTML = `
+                <div class="player-compare-header">
+                    <div class="compare-avatar">
+                        <img src="${playerLogos[player1Uid] || 'data/campeon_supremo/logos/default.png'}" alt="${player1.name}">
+                    </div>
+                    <div class="compare-player-name">${player1.name}</div>
+                </div>
+            `;
+            
+            document.getElementById('compare-player2-header').innerHTML = `
+                <div class="player-compare-header">
+                    <div class="compare-avatar">
+                        <img src="${playerLogos[player2Uid] || 'data/campeon_supremo/logos/default.png'}" alt="${player2.name}">
+                    </div>
+                    <div class="compare-player-name">${player2.name}</div>
+                </div>
+            `;
+            
+            const player1Weapons = getPlayerTopWeapons(player1Uid, 3);
+            const player2Weapons = getPlayerTopWeapons(player2Uid, 3);
+            
+            const compareRows = [
+                { label: 'Partidas Jugadas', getValue: p => formatNumber(p.matches), isHigherBetter: false },
+                { label: 'Puntos Totales', getValue: p => formatNumber(p.totalPoints), isHigherBetter: true },
+                { label: 'Posición en Ranking', getValue: p => `#${leaderboardData.findIndex(pl => pl.uid === p.uid) + 1}`, isHigherBetter: false },
+                { label: 'Bajas Totales', getValue: p => formatNumber(p.kills), isHigherBetter: true },
+                { label: 'KD', getValue: p => p.killsPerMatch, isHigherBetter: true },
+                { label: 'Daño Total', getValue: p => formatNumber(p.damage), isHigherBetter: true },
+                { label: 'Daño por Partida', getValue: p => formatNumber(p.damagePerMatch), isHigherBetter: true },
+                { label: 'Headshots', getValue: p => formatNumber(p.headshots), isHigherBetter: true },
+                { label: 'Precisión %', getValue: p => p.accuracy + '%', isHigherBetter: true },
+                { label: 'Total Disparos', getValue: p => formatNumber(p.totalShots), isHigherBetter: false },
+                { label: 'Total Impactos', getValue: p => formatNumber(p.totalHits), isHigherBetter: true },
+                { label: 'WWCD', getValue: p => formatNumber(p.wwcd), isHigherBetter: true },
+                { label: 'Distancia Máxima Baja', getValue: p => formatNumber(p.maxDistance) + 'm', isHigherBetter: true },
+                { label: 'Tiempo Supervivencia', getValue: p => formatSurvivalTime(p.survivalTime), isHigherBetter: true },
+                { label: 'Daño Recibido', getValue: p => formatNumber(p.damageTaken), isHigherBetter: false },
+                { label: 'Curación', getValue: p => formatNumber(p.healing), isHigherBetter: true },
+                { label: 'Bajas con Granada', getValue: p => formatNumber(p.grenadeKills), isHigherBetter: true },
+                { label: 'Top Armas', getValue: p => {
+                    const weapons = getPlayerTopWeapons(p.uid, 3);
+                    return weapons.map(w => `${w.weapon}: ${formatNumber(w.kills)}`).join('<br>') || 'Sin datos';
+                }, isHigherBetter: false }
+            ];
+            
+            let tableBodyHTML = '';
+            
+            compareRows.forEach(row => {
+                const player1Value = row.getValue(player1);
+                const player2Value = row.getValue(player2);
+                
+                let player1Class = '';
+                let player2Class = '';
+                
+                if (row.isHigherBetter !== false) {
+                    const player1Num = parseFloat(player1Value.toString().replace(/[^\d.-]/g, ''));
+                    const player2Num = parseFloat(player2Value.toString().replace(/[^\d.-]/g, ''));
+                    
+                    if (!isNaN(player1Num) && !isNaN(player2Num)) {
+                        if (player1Num > player2Num) {
+                            player1Class = 'compare-winner';
+                            player2Class = 'compare-loser';
+                        } else if (player1Num < player2Num) {
+                            player1Class = 'compare-loser';
+                            player2Class = 'compare-winner';
+                        }
+                    }
+                }
+                
+                tableBodyHTML += `
+                    <tr>
+                        <td class="stat-value-compare ${player1Class}">${player1Value}</td>
+                        <td class="stat-label-compare">${row.label}</td>
+                        <td class="stat-value-compare ${player2Class}">${player2Value}</td>
+                    </tr>
+                `;
+            });
+            
+            document.getElementById('compare-table-body').innerHTML = tableBodyHTML;
+            
+            compareModal.classList.add('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllData();
+        });
+    </script>
+</body>
+</html>
