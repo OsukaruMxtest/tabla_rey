@@ -90,7 +90,7 @@
 
         .posicion {
             font-weight: bold;
-            font-size: 2.2rem;
+            font-size: 3.2rem;
             color: #FFD700;
             justify-content: center;
             left: var(--pos-x, 310px);
@@ -98,14 +98,14 @@
 
         .jugador {
             font-weight: bold;
-            font-size: 2.2rem;
+            font-size: 3.2rem;
             justify-content: flex-start;
             left: var(--jugador-x, 700px);
         }
 
         .puntos {
             font-weight: bold;
-            font-size: 2.2rem;
+            font-size: 3.2rem;
             justify-content: center;
             left: var(--puntos-x, 1450px);
         }
@@ -119,12 +119,12 @@
         }
 
         #atras {
-            bottom: 0;
+            bottom: 100;
             left: 0;
         }
 
         #siguiente {
-            bottom: 0;
+            bottom: 100;
             right: 0;
         }
 
@@ -140,16 +140,25 @@
         #contenedor-unico {
             overflow: visible !important;
         }
+
+        #viewport-1920 {
+            width: 1920px;
+            height: 1080px;
+            transform-origin: top left;
+            position: relative;
+        }
     </style>
 </head>
 <body>
-    <div id="contenedor-unico">
-        <div class="tabla-cuerpo" id="cuerpo-unico">
+    <div id="viewport-1920">
+        <div id="contenedor-unico">
+            <div class="tabla-cuerpo" id="cuerpo-unico">
+            </div>
         </div>
-    </div>
 
-    <div class="navegacion" id="atras"></div>
-    <div class="navegacion" id="siguiente"></div>
+        <div class="navegacion" id="atras"></div>
+        <div class="navegacion" id="siguiente"></div>
+    </div>
 
     <script>
         let jugadores = new Map(); 
@@ -158,12 +167,12 @@
         let maxPaginas = 1; 
 
         const configPosiciones = {
-            posX: "310px",      
+            posX: "250px",      
             jugadorX: "700px", 
-            puntosX: "1450px",   
-            separacionVertical: "-101px", 
+            puntosX: "1550px",   
+            separacionVertical: "-75px", 
             alturaFila: "80px", 
-            topInicial: "180px" 
+            topInicial: "317px" 
         };
 
         function aplicarConfiguracion() {
@@ -392,6 +401,27 @@
         window.aplicarConfiguracion = aplicarConfiguracion;
         window.renderizarPagina = renderizarPagina;
     </script>
-</body>
+    <script>
+        function ajustarViewport1920() {
+            const baseWidth = 1920;
+            const baseHeight = 1080;
 
+            const scaleX = window.innerWidth / baseWidth;
+            const scaleY = window.innerHeight / baseHeight;
+            const scale = Math.min(scaleX, scaleY);
+
+            const viewport = document.getElementById("viewport-1920");
+            viewport.style.transform = `scale(${scale})`;
+
+            const offsetX = (window.innerWidth - baseWidth * scale) / 2;
+            const offsetY = (window.innerHeight - baseHeight * scale) / 2;
+
+            viewport.style.marginLeft = offsetX + "px";
+            viewport.style.marginTop = offsetY + "px";
+        }
+
+        window.addEventListener("resize", ajustarViewport1920);
+        window.addEventListener("load", ajustarViewport1920);
+    </script>
+</body>
 </html>
