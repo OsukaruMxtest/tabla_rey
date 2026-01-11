@@ -1755,6 +1755,7 @@
             </div>
         </div>
 
+        <!-- Footer -->
         <footer class="site-footer" role="contentinfo" aria-label="Pie de página">
             <div class="footer-inner">
                 <div class="footer-left">
@@ -1853,11 +1854,11 @@
 
         let playersData = {};
         let playerLogos = {};
-        let playerNamesFromLogos = {}; 
+        let playerNamesFromLogos = {};
         let leaderboardData = [];
         let previousLeaderboard = [];
         let weaponStats = {}; 
-        let playerWeapons = {}; 
+        let playerWeapons = {};
         
         const positionPoints = {
             1: 10, 2: 6, 3: 5, 4: 4, 5: 3, 6: 2, 7: 1, 8: 1
@@ -2141,7 +2142,6 @@
         async function loadMatches() {
             const matches = [];
             
-            // Cargar 10 partidas
             for (let i = 1; i <= 10; i++) {
                 try {
                     updateLoadingProgress(40 + (i * 2), `Cargando partida ${i}/10...`);
@@ -2354,7 +2354,28 @@
             
             leaderboardData = Object.values(playersData)
                 .filter(player => player.matches > 0)
-                .sort((a, b) => b.totalPoints - a.totalPoints);
+                .sort((a, b) => {
+                    if (b.totalPoints !== a.totalPoints) {
+                        return b.totalPoints - a.totalPoints;
+                    }
+                    
+                    if (b.wwcd !== a.wwcd) {
+                        return b.wwcd - a.wwcd;
+                    }
+                    
+                    if (b.positionPoints !== a.positionPoints) {
+                        return b.positionPoints - a.positionPoints;
+                    }
+                    
+                    if (b.killPoints !== a.killPoints) {
+                        return b.killPoints - a.killPoints;
+                    }
+                    
+                    const lastPosA = a.positions.length > 0 ? a.positions[a.positions.length - 1] : 100;
+                    const lastPosB = b.positions.length > 0 ? b.positions[b.positions.length - 1] : 100;
+                    
+                    return lastPosA - lastPosB;
+                });
         }
 
         function getTrendIcon(currentIndex, playerUid) {
