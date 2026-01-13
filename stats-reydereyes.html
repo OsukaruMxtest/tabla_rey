@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas Rey de Reyes - PUBG Mobile LATAM</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* VARIABLES Y RESET */
+        :root {
+            /* Paleta de colores */
+            --accent-1: #04f88c;
+            --accent-2: #bc5efb;
+            --accent-3: #2c2fd8;
+            --bg: #040444;
+            --muted: #8484a4;
+            --lav: #e2d7ef;
+            --radius: 12px;
+            --dark-blue: #04021b;
+            --blue-gray: #565680;
+            
+            /* Tipografía */
+            --font-heading: 'Poppins', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            
+            /* Efectos glassmorphism */
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--lav);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* FONDO FIJO */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg) 0%, #0c0c5a 100%);
+            z-index: -3;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: white;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: white;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-1);
+            border-radius: 2px;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        a {
+            color: var(--accent-1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-2);
+        }
+
+        img {
+            max-width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 5rem 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-center h2::after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: linear-gradient(90deg, var(--accent-1) 0%, var(--accent-3) 100%);
+            color: var(--dark-blue);
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(2, 248, 140, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(2, 248, 140, 0.5);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent-1);
+            color: var(--accent-1);
+            box-shadow: none;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-1);
+            color: var(--dark-blue);
+            box-shadow: 0 4px 15px rgba(2, 248, 140, 0.3);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* HEADER ESTILOS */
+        .site-header {
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            z-index: 90;
+            pointer-events: none;
+            transition: transform 0.3s ease;
+            background: rgba(4, 4, 68, 0.8);
+            backdrop-filter: blur(6px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
+        }
+
+        .nav-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 12px;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            pointer-events: all;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand-title {
+            display: block;
+            font-weight: 700;
+            color: var(--lav);
+            font-size: 18px;
+        }
+
+        .brand-sub {
+            display: block;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            color: var(--lav);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .cta-top {
+            background: linear-gradient(90deg, var(--accent-2), var(--accent-1));
+            color: var(--dark-blue);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .hamburger {
+            display: none;
+            background: transparent;
+            border: 0;
+            color: var(--lav);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .hamburger:focus {
+            outline: 3px solid rgba(4,248,140,0.14);
+        }
+
+        /* FONDO ANIMADO */
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(4, 4, 68, 0.1) 0%, rgba(4, 4, 68, 0.1) 100%);
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            padding: 120px 0 50px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-card {
+            background: rgba(4, 4, 68, 0.5);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* FOOTER ESTILOS */
+        .site-footer {
+            background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+            backdrop-filter: blur(6px);
+            border-top: 1px solid rgba(255,255,255,0.03);
+            z-index: 80;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 0 1.5rem;
+        }
+
+        .footer-left {
+            display: flex;
+            flex-direction: column;
+            min-width: 250px;
+            flex: 1;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        .footer-title {
+            font-weight: 700;
+            color: var(--lav);
+            font-size: 18px;
+        }
+
+        .footer-sub {
+            font-size: 12px;
+            color: var(--muted);
+            max-width: 300px;
+        }
+
+        .copyright {
+            font-size: 13px;
+            color: var(--muted);
+            margin-top: 1rem;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+            min-width: 180px;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h4 {
+            font-size: 16px;
+            color: var(--accent-1);
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--accent-1);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links li a {
+            color: var(--lav);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links li a:hover {
+            color: var(--accent-1);
+        }
+
+        .socials {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .socials a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            color: var(--lav);
+            text-decoration: none;
+            width: 36px;
+            height: 36px;
+        }
+
+        .socials a svg {
+            display: block;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .footer-inner {
+                gap: 1rem;
+            }
+
+            .footer-column {
+                min-width: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                right: 14px;
+                top: 64px;
+                background: linear-gradient(180deg, rgba(4,4,68,0.95), rgba(2,6,23,0.95));
+                padding: 12px;
+                border-radius: 10px;
+                flex-direction: column;
+                min-width: 200px;
+                box-shadow: 0 10px 30px rgba(2,6,23,0.7);
+            }
+            
+            .hamburger {
+                display: inline-flex;
+            }
+            
+            .site-header {
+                top: 0;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .footer-column {
+                width: 100%;
+            }
+            
+            .footer-links {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            /* Pie de página más compacto en móviles */
+            .site-footer {
+                padding: 1.5rem 0;
+            }
+            
+            .footer-brand {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-sub {
+                max-width: 100%;
+            }
+            
+            .socials {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            section {
+                padding: 3rem 0;
+            }
+            
+            .footer-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Focus states accesibles */
+        a:focus, button:focus {
+            outline: 3px solid rgba(124,58,237,0.12);
+            outline-offset: 2px;
+            border-radius: 8px;
+        }
+
+        .hidden {
+            transform: translateY(-100%);
+        }
+
+        /* ESTILOS ESPECÍFICOS PARA ESTADÍSTICAS */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            margin: 0.5rem 0;
+        }
+
+        .stat-label {
+            color: var(--lav);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .chart-container {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius);
+        }
+
+        .chart-title {
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--lav);
+        }
+
+        .error {
+            background: rgba(255, 50, 50, 0.1);
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            padding: 1rem;
+            border-radius: var(--radius);
+            margin: 1rem 0;
+            color: #ff6b6b;
+        }
+
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-item {
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+        }
+
+        .summary-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--lav);
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo animado -->
+    <div class="background-animation">
+        <video class="hero-video" autoplay loop muted playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23040444'/%3E%3Cstop offset='100%25' stop-color='%232c2fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23grad)'/%3E%3C/svg%3E">
+            <source src="https://i.imgur.com/T5caTx1.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+    </div>
+
+    <!-- Header / Menú -->
+    <header class="site-header" role="banner" id="mainHeader">
+        <div class="nav-shell">
+            <nav class="nav" role="navigation" aria-label="Navegación principal">
+                <div class="brand">
+                    <a href="#inicio" class="brand-link" aria-label="Inicio - PUBG Mobile LATAM">
+                        <img src="https://i.imgur.com/zztjYzN.png" alt="Logo PUBG Mobile LATAM" class="brand-logo" />
+                    </a>
+                    <div class="brand-text">
+                        <span class="brand-title">Discord PUBG Mobile LATAM</span>
+                        <small class="brand-sub">Eventos y torneos oficiales</small>
+                    </div>
+                </div>
+
+                <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú">
+                    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" /></svg>
+                </button>
+
+                <div id="main-nav" class="nav-links" role="menubar">
+                    <a role="menuitem" href="#inicio">Inicio</a>
+                    <a role="menuitem" href="#reglamento">Reglamento</a>
+                    <a role="menuitem" href="#quienes">Resultados</a>
+                    <a role="menuitem" href="#registro">Registro Salas Recreativas</a>
+                    <a class="cta-top" href="https://discord.com/invite/pubgmesp" target="_blank" rel="noopener">Unirme al Discord</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main id="main-content" class="main-content" role="main">
+        <div class="container">
+            <div class="content-card glass-card">
+                <div class="text-center">
+                    <h1>Estadísticas Rey de Reyes</h1>
+                    <p>Análisis de participación en el torneo Rey de Reyes</p>
+                    <p>Datos cargados dinámicamente desde los archivos CSV de cada sala</p>
+                </div>
+
+                <div id="loading" class="loading">
+                    <p>Cargando datos estadísticos...</p>
+                </div>
+
+                <div id="error-container" style="display: none;"></div>
+
+                <div id="stats-content" style="display: none;">
+                    <!-- Resumen de datos -->
+                    <div class="data-summary">
+                        <div class="summary-item">
+                            <div class="summary-label">Total de Archivos CSV</div>
+                            <div class="summary-value" id="total-files">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">CSV Cargados Correctamente</div>
+                            <div class="summary-value" id="loaded-files">0</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-label">CSV con Errores</div>
+                            <div class="summary-value" id="error-files">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Cards principales -->
+                    <div class="stats-container">
+                        <div class="stat-card glass-card">
+                            <h3>Jugadores Totales</h3>
+                            <div class="stat-value" id="total-players">0</div>
+                            <div class="stat-label">UID únicos en todas las salas</div>
+                        </div>
+                        
+                        <div class="stat-card glass-card">
+                            <h3>Día 1 (M1-M4)</h3>
+                            <div class="stat-value" id="day1-players">0</div>
+                            <div class="stat-label">Jugadores únicos</div>
+                        </div>
+                        
+                        <div class="stat-card glass-card">
+                            <h3>Día 2 (M5-M8)</h3>
+                            <div class="stat-value" id="day2-players">0</div>
+                            <div class="stat-label">Jugadores únicos</div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica por salas -->
+                    <div class="chart-container glass-card">
+                        <h2 class="chart-title">Jugadores por Sala</h2>
+                        <canvas id="sala-chart"></canvas>
+                    </div>
+
+                    <!-- Gráfica comparativa Día 1 vs Día 2 -->
+                    <div class="chart-container glass-card">
+                        <h2 class="chart-title">Comparativa Día 1 vs Día 2</h2>
+                        <canvas id="day-comparison-chart"></canvas>
+                    </div>
+
+                    <!-- Tabla de datos -->
+                    <div class="glass-card" style="margin-top: 2rem;">
+                        <h2>Detalle por Sala</h2>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                                <thead>
+                                    <tr style="background: rgba(255, 255, 255, 0.05);">
+                                        <th style="padding: 1rem; text-align: left; color: var(--accent-1);">Sala</th>
+                                        <th style="padding: 1rem; text-align: left; color: var(--accent-1);">Archivo CSV</th>
+                                        <th style="padding: 1rem; text-align: left; color: var(--accent-1);">Jugadores Únicos</th>
+                                        <th style="padding: 1rem; text-align: left; color: var(--accent-1);">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sala-table-body">
+                                    <!-- Datos generados dinámicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer / Pie de página -->
+    <footer class="site-footer" role="contentinfo" aria-label="Pie de página">
+        <div class="footer-inner">
+            <div class="footer-left">
+                <div class="footer-brand">
+                    <img src="https://i.imgur.com/zztjYzN.png" alt="Logo PUBG Mobile LATAM" class="footer-logo" />
+                    <div>
+                        <div class="footer-title">PUBG Mobile LATAM</div>
+                        <div class="footer-sub">Información oficial de eventos y torneos del servidor Discord oficial de PUBG Mobile LATAM</div>
+                    </div>
+                </div>
+                <div class="socials">
+                    <a href="https://www.facebook.com/PUBGMOBILE.LATAM.OFFICIAL/" target="_blank" rel="noopener" aria-label="Facebook">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.09 5.66 21.19 10.44 22v-7.04H7.9v-2.9h2.54V9.41c0-2.5 1.49-3.88 3.76-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.61.76-1.61 1.53v1.85h2.74l-.44 2.9h-2.3V22C18.34 21.19 22 17.09 22 12.07z" fill="currentColor"/></svg>
+                    </a>
+                    <a href="https://instagram.com/pubgmobile.latam" target="_blank" rel="noopener" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="12" cy="12" r="3.2" stroke="currentColor" stroke-width="1.2" fill="none"/><circle cx="17.5" cy="6.5" r="0.6" fill="currentColor"/></svg>
+                    </a>
+                    <a href="https://tiktok.com/@pubgmobile.latam" target="_blank" rel="noopener" aria-label="TikTok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 8.1a4 4 0 0 1-4-4v10.6A4 4 0 1 1 8 14V8" stroke="currentColor" stroke-width="1.3" fill="none"/><path d="M20 8v1.6A4 4 0 1 1 18 16" stroke="currentColor" stroke-width="1.3" fill="none"/></svg>
+                    </a>
+                    <a href="https://www.youtube.com/c/PUBGMOBILELATAM/" target="_blank" rel="noopener" aria-label="YouTube">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22.54 6.42a2.7 2.7 0 0 0-1.9-1.91C18.8 4 12 4 12 4s-6.8 0-8.64.51A2.7 2.7 0 0 0 1.46 6.42 28.6 28.6 0 0 0 1 12a28.6 28.6 0 0 0 .46 5.58 2.7 2.7 0 0 0 1.9 1.91C5.2 20 12 20 12 20s6.8 0 8.64-.51a2.7 2.7 0 0 0 1.9-1.91A28.6 28.6 0 0 0 23 12a28.6 28.6 0 0 0-.46-5.58z" stroke="currentColor" stroke-width="0.8" fill="none"/><path d="M10 15V9l5 3-5 3z" fill="currentColor"/></svg>
+                    </a>
+                    <a href="https://www.twitch.tv/pubgmobilees" target="_blank" rel="noopener" aria-label="Twitch">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 3h14l-2 4v9H8l-4 4V3z" stroke="currentColor" stroke-width="1" fill="none"/><path d="M16 8v5M12 8v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                    </a>
+                    <a href="https://x.com/PUBGMOBILELATAM" target="_blank" rel="noopener" aria-label="X">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 3l18 18M21 3L3 21" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+                <div class="copyright">© 2025 PUBG Mobile LATAM — Todos los derechos reservados</div>
+            </div>
+
+            <div class="footer-column">
+                <h4>Enlaces Rápidos</h4>
+                <ul class="footer-links">
+                    <li><a href="https://pubgmobile.com/redeem" target="_blank">Canje de códigos</a></li>
+                    <li><a href="https://discord.com/invite/pubgmesp" target="_blank">Discord Oficial</a></li>
+                    <li><a href="https://m.kwai.com/user/@PUBGMLATAM?fid=150001031460098..." target="_blank">Kwai</a></li>
+                    <li><a href="https://www.midasbuy.com/midasbuy/buy/pubgm" target="_blank">Compra de UC</a></li>
+                    <li><a href="https://www.pubgmobile.com/es/home.shtml" target="_blank">Página Oficial</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Esports</h4>
+                <ul class="footer-links">
+                    <li><a href="https://www.facebook.com/PUBGMOBILEESPORTSLATAM" target="_blank">Facebook Esports</a></li>
+                    <li><a href="https://www.instagram.com/esportspubgmobile.latam" target="_blank">Instagram Esports</a></li>
+                    <li><a href="https://esports.pubgmobile.com/#/index" target="_blank">Sitio Oficial Global</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <h4>Soporte Discord</h4>
+                <ul class="footer-links">
+                    <li><a href="https://discord.com/channels/433450407730085897/630636655568617472">Guía del Servidor</a></li>
+                    <li><a href="https://discord.com/channels/433450407730085897/1261084867089928284">Tickets de Asistencia</a></li>
+                    <li><a href="https://pubgmobile.lat/soporte">Reportar Errores</a></li>
+                    <li><a href="https://discord.com/channels/433450407730085897/636716258565423118">Preguntas Frecuentes</a></li>
+                    <li><a href="https://www.pubgmobile.com/terms/ESP">Términos y Condiciones PUBGM</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const hamburger = document.getElementById('hamburger');
+        const nav = document.getElementById('main-nav');
+        const mainHeader = document.getElementById('mainHeader');
+        let lastScrollY = window.scrollY;
+        
+        // Mobile Menu Toggle
+        hamburger.addEventListener('click', () => {
+            const expanded = hamburger.getAttribute('aria-expanded') === 'true';
+            hamburger.setAttribute('aria-expanded', String(!expanded));
+            if(!expanded){
+                nav.style.display = 'flex';
+                nav.setAttribute('data-open','true');
+            } else {
+                nav.style.display = '';
+                nav.removeAttribute('data-open');
+            }
+        });
+        
+        // Cerrar al hacer click fuera (en móvil)
+        document.addEventListener('click', (e) => {
+            if(window.innerWidth <= 768){
+                if(!nav.contains(e.target) && !hamburger.contains(e.target)){
+                    nav.style.display = '';
+                    hamburger.setAttribute('aria-expanded','false');
+                }
+            }
+        });
+        
+        // Soporte teclado (Escape para cerrar)
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape' && nav.getAttribute('data-open') === 'true'){
+                nav.style.display = '';
+                hamburger.setAttribute('aria-expanded','false');
+                hamburger.focus();
+            }
+        });
+        
+        // Control de scroll para ocultar/mostrar header
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                // Scroll hacia abajo
+                mainHeader.classList.add('hidden');
+            } else {
+                // Scroll hacia arriba
+                mainHeader.classList.remove('hidden');
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+        
+        // Manejar video para móviles
+        function handleVideoFallback() {
+            const video = document.querySelector('.hero-video');
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            
+            if (isMobile) {
+                video.poster = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23040444'/%3E%3Cstop offset='100%25' stop-color='%232c2fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23grad)'/%3E%3C/svg%3E";
+                video.innerHTML = '';
+            }
+        }
+        
+        // ==================== CÓDIGO PARA ESTADÍSTICAS ====================
+        
+        // Configuración
+        const csvFiles = [
+            { name: 'M1.csv', sala: 'Sala 1', day: 1 },
+            { name: 'M2.csv', sala: 'Sala 2', day: 1 },
+            { name: 'M3.csv', sala: 'Sala 3', day: 1 },
+            { name: 'M4.csv', sala: 'Sala 4', day: 1 },
+            { name: 'M5.csv', sala: 'Sala 5', day: 2 },
+            { name: 'M6.csv', sala: 'Sala 6', day: 2 },
+            { name: 'M7.csv', sala: 'Sala 7', day: 2 },
+            { name: 'M8.csv', sala: 'Sala 8', day: 2 }
+        ];
+        
+        const basePath = 'data/campeon_supremo/partidas/';
+        
+        // Variables para almacenar datos
+        let allPlayers = new Set();
+        let day1Players = new Set();
+        let day2Players = new Set();
+        let salaData = [];
+        let loadedCount = 0;
+        let errorCount = 0;
+        
+        // Elementos DOM
+        const loadingElement = document.getElementById('loading');
+        const errorContainer = document.getElementById('error-container');
+        const statsContent = document.getElementById('stats-content');
+        const totalPlayersElement = document.getElementById('total-players');
+        const day1PlayersElement = document.getElementById('day1-players');
+        const day2PlayersElement = document.getElementById('day2-players');
+        const totalFilesElement = document.getElementById('total-files');
+        const loadedFilesElement = document.getElementById('loaded-files');
+        const errorFilesElement = document.getElementById('error-files');
+        const salaTableBody = document.getElementById('sala-table-body');
+        
+        // Inicializar contadores de archivos
+        totalFilesElement.textContent = csvFiles.length;
+        
+        // Función para cargar un archivo CSV
+        async function loadCSV(fileInfo) {
+            try {
+                const response = await fetch(basePath + fileInfo.name);
+                
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                
+                if (lines.length < 2) {
+                    throw new Error('CSV vacío o con formato incorrecto');
+                }
+                
+                // Obtener encabezados
+                const headers = lines[0].split(',');
+                const uidIndex = 3; // uId es la cuarta columna (índice 3)
+                
+                if (headers.length <= uidIndex) {
+                    throw new Error('CSV no tiene suficientes columnas');
+                }
+                
+                // Procesar jugadores
+                const salaPlayers = new Set();
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+                    
+                    const columns = line.split(',');
+                    if (columns.length > uidIndex) {
+                        const uid = columns[uidIndex].trim();
+                        if (uid) {
+                            salaPlayers.add(uid);
+                            allPlayers.add(uid);
+                            
+                            if (fileInfo.day === 1) {
+                                day1Players.add(uid);
+                            } else {
+                                day2Players.add(uid);
+                            }
+                        }
+                    }
+                }
+                
+                loadedCount++;
+                loadedFilesElement.textContent = loadedCount;
+                
+                return {
+                    sala: fileInfo.sala,
+                    file: fileInfo.name,
+                    players: salaPlayers.size,
+                    status: 'success',
+                    error: null
+                };
+                
+            } catch (error) {
+                errorCount++;
+                errorFilesElement.textContent = errorCount;
+                loadedFilesElement.textContent = loadedCount;
+                
+                return {
+                    sala: fileInfo.sala,
+                    file: fileInfo.name,
+                    players: 0,
+                    status: 'error',
+                    error: error.message
+                };
+            }
+        }
+        
+        // Función para mostrar errores
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            errorContainer.appendChild(errorDiv);
+            errorContainer.style.display = 'block';
+        }
+        
+        // Función para crear gráficas
+        function createCharts() {
+            // Datos para gráfica de salas
+            const salaLabels = salaData.map(item => item.sala);
+            const salaPlayerCounts = salaData.map(item => item.players);
+            
+            // Colores para gráficas usando variables CSS
+            const style = getComputedStyle(document.documentElement);
+            const accent1 = style.getPropertyValue('--accent-1').trim();
+            const accent2 = style.getPropertyValue('--accent-2').trim();
+            const accent3 = style.getPropertyValue('--accent-3').trim();
+            const lavColor = style.getPropertyValue('--lav').trim();
+            
+            // Gráfica de salas
+            const salaCtx = document.getElementById('sala-chart').getContext('2d');
+            new Chart(salaCtx, {
+                type: 'bar',
+                data: {
+                    labels: salaLabels,
+                    datasets: [{
+                        label: 'Jugadores Únicos',
+                        data: salaPlayerCounts,
+                        backgroundColor: [
+                            accent1, accent2, accent3,
+                            '#04f88c80', '#bc5efb80', '#2c2fd880',
+                            '#04f88c40', '#bc5efb40'
+                        ],
+                        borderColor: lavColor,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: lavColor
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: lavColor
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: lavColor
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Gráfica comparativa Día 1 vs Día 2
+            const dayCtx = document.getElementById('day-comparison-chart').getContext('2d');
+            new Chart(dayCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Día 1 (M1-M4)', 'Día 2 (M5-M8)'],
+                    datasets: [{
+                        data: [day1Players.size, day2Players.size],
+                        backgroundColor: [accent1, accent2],
+                        borderColor: [lavColor, lavColor],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: lavColor,
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Función para actualizar la tabla
+        function updateTable() {
+            salaTableBody.innerHTML = '';
+            
+            salaData.forEach(item => {
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid rgba(255, 255, 255, 0.1)';
+                
+                const statusColor = item.status === 'success' ? 'var(--accent-1)' : 'var(--accent-2)';
+                const statusText = item.status === 'success' ? '✓ Cargado' : `✗ Error: ${item.error}`;
+                
+                row.innerHTML = `
+                    <td style="padding: 1rem;">${item.sala}</td>
+                    <td style="padding: 1rem;">${item.file}</td>
+                    <td style="padding: 1rem; color: var(--accent-1); font-weight: 700;">${item.players}</td>
+                    <td style="padding: 1rem; color: ${statusColor};">${statusText}</td>
+                `;
+                
+                salaTableBody.appendChild(row);
+            });
+        }
+        
+        // Función principal para cargar todos los datos
+        async function loadAllData() {
+            try {
+                // Cargar todos los archivos CSV
+                const promises = csvFiles.map(fileInfo => loadCSV(fileInfo));
+                const results = await Promise.all(promises);
+                
+                salaData = results;
+                
+                // Actualizar estadísticas
+                totalPlayersElement.textContent = allPlayers.size;
+                day1PlayersElement.textContent = day1Players.size;
+                day2PlayersElement.textContent = day2Players.size;
+                
+                // Ocultar carga y mostrar contenido
+                loadingElement.style.display = 'none';
+                statsContent.style.display = 'block';
+                
+                // Mostrar errores si existen
+                const errors = results.filter(r => r.status === 'error');
+                if (errors.length > 0) {
+                    showError(`Se encontraron errores en ${errors.length} archivos. Los datos mostrados son parciales.`);
+                }
+                
+                // Crear gráficas y tabla
+                createCharts();
+                updateTable();
+                
+            } catch (error) {
+                loadingElement.style.display = 'none';
+                showError(`Error al cargar datos: ${error.message}`);
+            }
+        }
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', () => {
+            // Manejar video para móviles
+            handleVideoFallback();
+            
+            // Manejar redimensionamiento para móviles
+            window.addEventListener('resize', handleVideoFallback);
+            
+            // Cargar datos estadísticos
+            loadAllData();
+        });
+    </script>
+</body>
+</html>
