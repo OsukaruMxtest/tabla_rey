@@ -6,9 +6,7 @@
     <title>Estadísticas Rey de Reyes - PUBG Mobile LATAM</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* VARIABLES Y RESET */
         :root {
-            /* Paleta de colores */
             --accent-1: #04f88c;
             --accent-2: #bc5efb;
             --accent-3: #2c2fd8;
@@ -19,11 +17,9 @@
             --dark-blue: #04021b;
             --blue-gray: #565680;
             
-            /* Tipografía */
             --font-heading: 'Poppins', sans-serif;
             --font-body: 'Inter', sans-serif;
             
-            /* Efectos glassmorphism */
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: 1px solid rgba(255, 255, 255, 0.1);
             --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -43,7 +39,6 @@
             overflow-x: hidden;
         }
 
-        /* FONDO FIJO */
         body::before {
             content: '';
             position: fixed;
@@ -175,7 +170,6 @@
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* HEADER ESTILOS */
         .site-header {
             position: fixed;
             left: 0;
@@ -271,7 +265,6 @@
             outline: 3px solid rgba(4,248,140,0.14);
         }
 
-        /* FONDO ANIMADO */
         .background-animation {
             position: fixed;
             top: 0;
@@ -302,7 +295,6 @@
             background: linear-gradient(180deg, rgba(4, 4, 68, 0.1) 0%, rgba(4, 4, 68, 0.1) 100%);
         }
 
-        /* MAIN CONTENT */
         .main-content {
             padding: 120px 0 50px;
             position: relative;
@@ -316,7 +308,6 @@
             margin-bottom: 2rem;
         }
 
-        /* FOOTER ESTILOS */
         .site-footer {
             background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
             backdrop-filter: blur(6px);
@@ -445,7 +436,6 @@
             display: block;
         }
 
-        /* RESPONSIVE */
         @media (max-width: 992px) {
             .footer-inner {
                 gap: 1rem;
@@ -493,7 +483,6 @@
                 gap: 1rem;
             }
             
-            /* Pie de página más compacto en móviles */
             .site-footer {
                 padding: 1.5rem 0;
             }
@@ -526,7 +515,6 @@
             }
         }
 
-        /* Focus states accesibles */
         a:focus, button:focus {
             outline: 3px solid rgba(124,58,237,0.12);
             outline-offset: 2px;
@@ -537,7 +525,6 @@
             transform: translateY(-100%);
         }
 
-        /* ESTILOS ESPECÍFICOS PARA ESTADÍSTICAS */
         .stats-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -620,7 +607,6 @@
     </style>
 </head>
 <body>
-    <!-- Fondo animado -->
     <div class="background-animation">
         <video class="hero-video" autoplay loop muted playsinline poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23040444'/%3E%3Cstop offset='100%25' stop-color='%232c2fd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1920' height='1080' fill='url(%23grad)'/%3E%3C/svg%3E">
             <source src="https://i.imgur.com/T5caTx1.mp4" type="video/mp4">
@@ -628,7 +614,6 @@
         <div class="hero-overlay"></div>
     </div>
 
-    <!-- Header / Menú -->
     <header class="site-header" role="banner" id="mainHeader">
         <div class="nav-shell">
             <nav class="nav" role="navigation" aria-label="Navegación principal">
@@ -657,7 +642,6 @@
         </div>
     </header>
 
-    <!-- Contenido principal -->
     <main id="main-content" class="main-content" role="main">
         <div class="container">
             <div class="content-card glass-card">
@@ -674,7 +658,6 @@
                 <div id="error-container" style="display: none;"></div>
 
                 <div id="stats-content" style="display: none;">
-                    <!-- Resumen de datos -->
                     <div class="data-summary">
                         <div class="summary-item">
                             <div class="summary-label">Total de Archivos CSV</div>
@@ -690,7 +673,6 @@
                         </div>
                     </div>
 
-                    <!-- Cards principales -->
                     <div class="stats-container">
                         <div class="stat-card glass-card">
                             <h3>Jugadores Totales</h3>
@@ -711,19 +693,16 @@
                         </div>
                     </div>
 
-                    <!-- Gráfica por salas -->
                     <div class="chart-container glass-card">
                         <h2 class="chart-title">Jugadores por Sala</h2>
                         <canvas id="sala-chart"></canvas>
                     </div>
 
-                    <!-- Gráfica comparativa Día 1 vs Día 2 -->
                     <div class="chart-container glass-card">
                         <h2 class="chart-title">Comparativa Día 1 vs Día 2</h2>
                         <canvas id="day-comparison-chart"></canvas>
                     </div>
 
-                    <!-- Tabla de datos -->
                     <div class="glass-card" style="margin-top: 2rem;">
                         <h2>Detalle por Sala</h2>
                         <div style="overflow-x: auto;">
@@ -737,7 +716,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="sala-table-body">
-                                    <!-- Datos generados dinámicamente -->
                                 </tbody>
                             </table>
                         </div>
@@ -747,7 +725,6 @@
         </div>
     </main>
 
-    <!-- Footer / Pie de página -->
     <footer class="site-footer" role="contentinfo" aria-label="Pie de página">
         <div class="footer-inner">
             <div class="footer-left">
@@ -815,13 +792,11 @@
     </footer>
 
     <script>
-        // DOM Elements
         const hamburger = document.getElementById('hamburger');
         const nav = document.getElementById('main-nav');
         const mainHeader = document.getElementById('mainHeader');
         let lastScrollY = window.scrollY;
         
-        // Mobile Menu Toggle
         hamburger.addEventListener('click', () => {
             const expanded = hamburger.getAttribute('aria-expanded') === 'true';
             hamburger.setAttribute('aria-expanded', String(!expanded));
@@ -834,7 +809,6 @@
             }
         });
         
-        // Cerrar al hacer click fuera (en móvil)
         document.addEventListener('click', (e) => {
             if(window.innerWidth <= 768){
                 if(!nav.contains(e.target) && !hamburger.contains(e.target)){
@@ -844,7 +818,6 @@
             }
         });
         
-        // Soporte teclado (Escape para cerrar)
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Escape' && nav.getAttribute('data-open') === 'true'){
                 nav.style.display = '';
@@ -853,22 +826,18 @@
             }
         });
         
-        // Control de scroll para ocultar/mostrar header
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
             
             if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                // Scroll hacia abajo
                 mainHeader.classList.add('hidden');
             } else {
-                // Scroll hacia arriba
                 mainHeader.classList.remove('hidden');
             }
             
             lastScrollY = currentScrollY;
         });
         
-        // Manejar video para móviles
         function handleVideoFallback() {
             const video = document.querySelector('.hero-video');
             const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -879,9 +848,7 @@
             }
         }
         
-        // ==================== CÓDIGO PARA ESTADÍSTICAS ====================
         
-        // Configuración
         const csvFiles = [
             { name: 'M1.csv', sala: 'Sala 1', day: 1 },
             { name: 'M2.csv', sala: 'Sala 2', day: 1 },
@@ -895,7 +862,6 @@
         
         const basePath = 'data/campeon_supremo/partidas/';
         
-        // Variables para almacenar datos
         let allPlayers = new Set();
         let day1Players = new Set();
         let day2Players = new Set();
@@ -903,7 +869,6 @@
         let loadedCount = 0;
         let errorCount = 0;
         
-        // Elementos DOM
         const loadingElement = document.getElementById('loading');
         const errorContainer = document.getElementById('error-container');
         const statsContent = document.getElementById('stats-content');
@@ -915,10 +880,8 @@
         const errorFilesElement = document.getElementById('error-files');
         const salaTableBody = document.getElementById('sala-table-body');
         
-        // Inicializar contadores de archivos
         totalFilesElement.textContent = csvFiles.length;
         
-        // Función para cargar un archivo CSV
         async function loadCSV(fileInfo) {
             try {
                 const response = await fetch(basePath + fileInfo.name);
@@ -934,15 +897,13 @@
                     throw new Error('CSV vacío o con formato incorrecto');
                 }
                 
-                // Obtener encabezados
                 const headers = lines[0].split(',');
-                const uidIndex = 3; // uId es la cuarta columna (índice 3)
+                const uidIndex = 3; 
                 
                 if (headers.length <= uidIndex) {
                     throw new Error('CSV no tiene suficientes columnas');
                 }
                 
-                // Procesar jugadores
                 const salaPlayers = new Set();
                 
                 for (let i = 1; i < lines.length; i++) {
@@ -991,7 +952,6 @@
             }
         }
         
-        // Función para mostrar errores
         function showError(message) {
             const errorDiv = document.createElement('div');
             errorDiv.className = 'error';
@@ -1000,20 +960,16 @@
             errorContainer.style.display = 'block';
         }
         
-        // Función para crear gráficas
         function createCharts() {
-            // Datos para gráfica de salas
             const salaLabels = salaData.map(item => item.sala);
             const salaPlayerCounts = salaData.map(item => item.players);
             
-            // Colores para gráficas usando variables CSS
             const style = getComputedStyle(document.documentElement);
             const accent1 = style.getPropertyValue('--accent-1').trim();
             const accent2 = style.getPropertyValue('--accent-2').trim();
             const accent3 = style.getPropertyValue('--accent-3').trim();
             const lavColor = style.getPropertyValue('--lav').trim();
             
-            // Gráfica de salas
             const salaCtx = document.getElementById('sala-chart').getContext('2d');
             new Chart(salaCtx, {
                 type: 'bar',
@@ -1062,7 +1018,6 @@
                 }
             });
             
-            // Gráfica comparativa Día 1 vs Día 2
             const dayCtx = document.getElementById('day-comparison-chart').getContext('2d');
             new Chart(dayCtx, {
                 type: 'doughnut',
@@ -1090,7 +1045,6 @@
             });
         }
         
-        // Función para actualizar la tabla
         function updateTable() {
             salaTableBody.innerHTML = '';
             
@@ -1112,31 +1066,25 @@
             });
         }
         
-        // Función principal para cargar todos los datos
         async function loadAllData() {
             try {
-                // Cargar todos los archivos CSV
                 const promises = csvFiles.map(fileInfo => loadCSV(fileInfo));
                 const results = await Promise.all(promises);
                 
                 salaData = results;
                 
-                // Actualizar estadísticas
                 totalPlayersElement.textContent = allPlayers.size;
                 day1PlayersElement.textContent = day1Players.size;
                 day2PlayersElement.textContent = day2Players.size;
                 
-                // Ocultar carga y mostrar contenido
                 loadingElement.style.display = 'none';
                 statsContent.style.display = 'block';
                 
-                // Mostrar errores si existen
                 const errors = results.filter(r => r.status === 'error');
                 if (errors.length > 0) {
                     showError(`Se encontraron errores en ${errors.length} archivos. Los datos mostrados son parciales.`);
                 }
                 
-                // Crear gráficas y tabla
                 createCharts();
                 updateTable();
                 
@@ -1146,17 +1094,14 @@
             }
         }
         
-        // Inicialización
         document.addEventListener('DOMContentLoaded', () => {
-            // Manejar video para móviles
             handleVideoFallback();
             
-            // Manejar redimensionamiento para móviles
             window.addEventListener('resize', handleVideoFallback);
             
-            // Cargar datos estadísticos
             loadAllData();
         });
     </script>
 </body>
+
 </html>
